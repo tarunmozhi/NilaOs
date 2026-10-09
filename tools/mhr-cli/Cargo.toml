@@ -1,0 +1,12 @@
+[package]
+name = "mhr-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+mhr-core = { path = "../../crates/mhr-core" }
+serde_json.workspace = true
+nila-security = { path = "../../crates/nila-security" }
+nila-bootstrap = { path = "../../crates/nila-bootstrap" }

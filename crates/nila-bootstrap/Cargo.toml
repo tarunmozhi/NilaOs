@@ -1,0 +1,9 @@
+[package]
+name = "nila-bootstrap"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+nila-security = { path = "../nila-security" }
+nila-services = { path = "../nila-services" }

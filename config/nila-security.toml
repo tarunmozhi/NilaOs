@@ -1,0 +1,5 @@
+selinux_enforcing = true
+require_signed_packages = true
+require_integrity = true
+deny_root_to_apps = true
+audit_privileged_actions = true
