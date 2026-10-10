@@ -3,37 +3,77 @@
 from pathlib import Path
 import sys
 import tomllib
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PROFILE = ROOT / "device/vivo/1906/device.toml"
+
+REQUIRED_VALUES = {
+    ("device", "name"): "vivo Y11 / vivo 1906",
+    ("device", "codename"): "vivo1906",
+    ("device", "model"): "PD1930F",
+    ("hardware", "abi"): "arm64",
+    ("compatibility", "deployment"): "mobile-only",
+}
+REQUIRED_TABLES = ("device", "hardware", "compatibility", "features")
+
+
+def validate_profile(data: Any) -> list[str]:
+    """Return schema errors instead of crashing on malformed TOML structures."""
+    errors: list[str] = []
+    if not isinstance(data, dict):
+        return ["profile root must be a TOML table"]
+
+    for section in REQUIRED_TABLES:
+        if not isinstance(data.get(section), dict):
+            errors.append(f"{section} must be a TOML table")
+
+    for (section, key), expected in REQUIRED_VALUES.items():
+        values = data.get(section)
+        if not isinstance(values, dict):
+            continue
+        actual = values.get(key)
+        if actual != expected:
+            errors.append(f"{section}.{key}: expected {expected!r}, got {actual!r}")
+
+    hardware = data.get("hardware")
+    if isinstance(hardware, dict):
+        for key in ("ram_mb", "storage_gb"):
+            value = hardware.get(key)
+            if type(value) is not int or value < 1:
+                errors.append(f"hardware.{key} must be a positive integer")
+
+        for key in ("soc", "cpu", "display", "storage_type"):
+            if not isinstance(hardware.get(key), str) or not hardware[key].strip():
+                errors.append(f"hardware.{key} must be a non-empty string")
+
+    features = data.get("features")
+    if isinstance(features, dict):
+        for key in ("dual_sim", "fingerprint", "wifi", "bluetooth", "gnss", "usb_otg"):
+            if type(features.get(key)) is not bool:
+                errors.append(f"features.{key} must be a boolean")
+
+    compatibility = data.get("compatibility")
+    if isinstance(compatibility, dict):
+        if not isinstance(compatibility.get("android_reference"), str):
+            errors.append("compatibility.android_reference must be a string")
+        if compatibility.get("development_host") != "PC/Linux/VM":
+            errors.append(
+                "compatibility.development_host must be 'PC/Linux/VM' "
+                "(development only; deployment remains mobile-only)"
+            )
+
+    return errors
 
 
 def main() -> int:
     try:
         data = tomllib.loads(PROFILE.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
+    except (OSError, UnicodeError, tomllib.TOMLDecodeError) as exc:
         print(f"ERROR: cannot parse {PROFILE.relative_to(ROOT)}: {exc}", file=sys.stderr)
         return 1
 
-    required = {
-        ("device", "name"): "vivo Y11 / vivo 1906",
-        ("device", "codename"): "vivo1906",
-        ("device", "model"): "PD1930F",
-        ("hardware", "abi"): "arm64",
-        ("compatibility", "deployment"): "mobile-only",
-    }
-    errors = []
-    for (section, key), expected in required.items():
-        actual = data.get(section, {}).get(key)
-        if actual != expected:
-            errors.append(f"{section}.{key}: expected {expected!r}, got {actual!r}")
-
-    hardware = data.get("hardware", {})
-    if not isinstance(hardware.get("ram_mb"), int) or hardware["ram_mb"] < 1:
-        errors.append("hardware.ram_mb must be a positive integer")
-    if not isinstance(hardware.get("storage_gb"), int) or hardware["storage_gb"] < 1:
-        errors.append("hardware.storage_gb must be a positive integer")
-
+    errors = validate_profile(data)
     if errors:
         print("Device profile validation failed:", file=sys.stderr)
         for error in errors:
