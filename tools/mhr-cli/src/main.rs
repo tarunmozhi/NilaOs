@@ -3,7 +3,7 @@ use mfr_nila::{load_trusted_keys, verify_manifest_signature, verify_payload};
 use mhr_core::{analyze, create_manifest, MhfManifest};
 use nila_bootstrap::prepare_startup;
 use nila_security::load_production_policy;
-use std::{env, fs};
+use std::{env, fs, path::Path};
 
 fn read_manifest(path: &str) -> Result<MhfManifest> {
     let bytes = fs::read(path).with_context(|| format!("could not read manifest: {path}"))?;
@@ -33,7 +33,9 @@ fn main() -> Result<()> {
         "manifest" => {
             let file = args.next().ok_or_else(|| anyhow::anyhow!("missing file"))?;
             let name = args.next().ok_or_else(|| anyhow::anyhow!("missing name"))?;
-            let version = args.next().ok_or_else(|| anyhow::anyhow!("missing version"))?;
+            let version = args
+                .next()
+                .ok_or_else(|| anyhow::anyhow!("missing version"))?;
             let analysis = analyze(&file)?;
             println!(
                 "{}",
@@ -59,7 +61,9 @@ fn main() -> Result<()> {
                 .context("verified manifest unexpectedly lacks signature metadata")?;
             println!("MHF manifest signature: VALID");
             println!("Signer key ID: {key_id}");
-            println!("Note: this verifies signed metadata only, not a payload or application runtime.");
+            println!(
+                "Note: this verifies signed metadata only, not a payload or application runtime."
+            );
         }
         "verify-package" => {
             let manifest_path = args
@@ -75,7 +79,7 @@ fn main() -> Result<()> {
             let manifest = read_manifest(&manifest_path)?;
             let trusted_keys = load_trusted_keys(&keys_path)?;
             verify_manifest_signature(&manifest, &trusted_keys.keys)?;
-            verify_payload(std::path::Path::new(&payload_path), &manifest.sha256)?;
+            verify_payload(Path::new(&payload_path), &manifest.sha256)?;
 
             println!("MHF manifest signature: VALID");
             println!("Payload SHA-256: VALID");
