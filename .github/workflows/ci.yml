@@ -31,7 +31,10 @@ jobs:
         run: python3 -m unittest discover -s tests -p 'test_*.py'
 
       - name: Check kernel build helper syntax
-        run: bash -n scripts/build-kernel.sh
+        run: bash -n scripts/build-kernel.sh tests/test-build-kernel-helper.sh
+
+      - name: Test kernel build helper with mocked tools
+        run: bash tests/test-build-kernel-helper.sh
 
       - name: Check kernel build helper usage
         run: bash scripts/build-kernel.sh --help
