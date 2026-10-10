@@ -27,8 +27,26 @@ jobs:
       - name: Validate vivo 1906 device profile
         run: python3 scripts/validate-device-profile.py
 
+      - name: Test device profile validator
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
+
       - name: Check kernel build helper syntax
         run: bash -n scripts/build-kernel.sh
+
+      - name: Check kernel build helper usage
+        run: bash scripts/build-kernel.sh --help
+
+      - name: Reject unsafe kernel build inputs
+        shell: bash
+        run: |
+          if KERNEL_SRC=/tmp KERNEL_DEFCONFIG=../escape JOBS=1 bash scripts/build-kernel.sh >/dev/null 2>&1; then
+            echo "ERROR: unsafe defconfig path was accepted" >&2
+            exit 1
+          fi
+          if KERNEL_SRC=/tmp KERNEL_DEFCONFIG=defconfig JOBS=0 bash scripts/build-kernel.sh >/dev/null 2>&1; then
+            echo "ERROR: invalid build parallelism was accepted" >&2
+            exit 1
+          fi
 
       - name: Check formatting
         run: cargo fmt --all -- --check
