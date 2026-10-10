@@ -3,7 +3,11 @@ name = "mfr-nila"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+
 [dependencies]
 anyhow.workspace = true
-sha2.workspace = true
+ed25519-dalek.workspace = true
 mhr-core = { path = "../mhr-core" }
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true

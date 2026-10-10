@@ -1,0 +1,8 @@
+# Public keys trusted for MHF manifest signatures.
+# Provision a production Ed25519 public key as 64 hex characters:
+# [keys]
+# "nila-release-2026" = "64_hex_character_public_key"
+#
+# Keep signing private keys offline; never commit them here.
+# An empty store intentionally trusts no package signers.
+[keys]
