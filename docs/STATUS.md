@@ -4,7 +4,9 @@
 
 Nila OS is a mobile Linux operating-system project: Linux kernel plus native Linux userspace, with a Nila graphical shell. It is not Android or AOSP. The vivo device profile's Android/Funtouch values refer to the phone's stock firmware only.
 
-Nila Assistant is intended to be an internet-connected, voice-first AI assistant that can search online and operate apps and account sessions when enabled by the user. It is intended to support call handling and user-selected voice features through permission-checked system APIs. The user should control access by app, account, and capability. Banking, RailOne, and similar apps must remain in separate non-root sandboxes; Assistant access is opt-in and cannot bypass those boundaries.
+The product target beyond the base system includes Nila Skin and Easy Touch, a native Nila Browser, MHF/MHR application handling, an internet-connected Nila Assistant, security and app-isolation services, External Memory, an installer, updates, and recovery. The target architecture and implementation boundaries are described in [ARCHITECTURE.md](ARCHITECTURE.md) and tracked in [ROADMAP.md](ROADMAP.md).
+
+Nila Assistant is intended to search online and operate apps and account sessions when enabled by the user. It should support call handling and user-selected voice features through permission-checked system APIs. The user should control access by app, account, and capability. Banking, RailOne, and similar apps must remain in separate non-root sandboxes; Assistant access is opt-in and cannot bypass those boundaries.
 
 The current repository is an engineering baseline, not a Linux distribution or bootable phone image.
 
@@ -23,8 +25,26 @@ The current repository is an engineering baseline, not a Linux distribution or b
 - MHR command-line tool
 - vivo 1906 reference profile with schema validation and regression tests
 - Guarded ARM64 Linux kernel-build helper with defconfig and job-count validation
+- Nila Skin browser preview with user-toggleable, draggable, customizable Easy Touch shortcuts
 
-These code checks and registries do not provide a running kernel, userspace, init system, or service enforcement.
+These code checks, registries, and preview do not provide a running kernel, userspace, init system, service enforcement, or native phone UI.
+
+## Target feature status
+
+| Component | Current state |
+| --- | --- |
+| Nila UI framework and Nila Skin | Browser prototype only; no native Linux shell or system UI |
+| Easy Touch | Toggle, move, and shortcut customization work in the browser preview; native system actions are not connected |
+| Nila Browser | Not implemented as an application; no selected or integrated web engine, extension service, privacy controller, VPN, or Tor integration |
+| Nila Assistant | Unprivileged service registry entry and documented requirements only; no AI runtime, internet access, account/session broker, call control, voice processing, or app permission UI |
+| MHF/MHR application support | Extension recognition, metadata, hashing, signature checks, and fail-closed authorization; no container installer or executable runtime |
+| .sh, .apk, .exe, and .app execution | Not implemented. The current .app mapping means Apple application metadata; package meaning must be defined before implementation |
+| Per-app security and financial-app sandboxes | Not implemented or enforced by the kernel; banking and RailOne apps have not been tested |
+| Single owner profile and systemless administration | Not implemented; no root manager or privilege broker |
+| Nila Security Center, Vault, memory/storage/network/power/package/update services | Names and policy checks only where present; no complete operating-system services |
+| External Memory, zRAM, storage-backed swap | Not implemented or benchmarked on the target device |
+| Installer, PC/USB-assisted installation, signed OTA, recovery, rollback | Not implemented |
+| Themes | Preview customization only; no native theme service or verified third-party theme integration |
 
 ## Important security limits
 
@@ -33,7 +53,7 @@ These code checks and registries do not provide a running kernel, userspace, ini
 - The runtime names are identifiers only. No native Linux, Android compatibility, EXE, or APP execution is implemented.
 - Policy validation and service-list construction do not enforce Linux security modules or create operating-system services.
 - Hash verification checks payload bytes against a supplied digest; it does not establish who supplied the digest or whether the payload is safe.
-- The Assistant's listed service is an unprivileged registry entry only. There is no Assistant runtime, internet integration, credential/session broker, account-operation interface, call-control integration, voice-processing service, or per-app permission UI.
+- Banking or RailOne compatibility cannot be promised until an isolated runtime is implemented and each app is tested with its provider's integrity requirements.
 
 ## Not yet implemented / verified
 
@@ -49,8 +69,9 @@ These code checks and registries do not provide a running kernel, userspace, ini
 - Separate enforced non-root app sandboxes, including profiles for banking and RailOne apps
 - User-controlled systemless root mechanism that keeps root unavailable to apps and assistant processes
 - Nila Skin as a native Linux graphical shell and system UI
+- Native Nila Browser and its privacy, extension, VPN, and Tor integrations
 - Nila Assistant runtime, internet access, voice interaction, app/account permission controls, protected credential/session broker, call control, and approved voice features
-- Installer runtime and External Memory runtime
+- Installer runtime, External Memory runtime, zRAM, and storage-backed swap
 - Telephony/camera/audio/GNSS hardware integration
 - Device-specific Linux boot and root filesystem image packaging
 - Bootable phone image and real-device boot/hardware tests
