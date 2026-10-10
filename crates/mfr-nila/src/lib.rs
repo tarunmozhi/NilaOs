@@ -3,7 +3,8 @@ use mhr_core::{sha256_file, MhfManifest};
 use std::path::Path;
 
 pub fn verify_payload(path: &Path, expected_sha256: &str) -> Result<()> {
-    if expected_sha256.len() != 64 || !expected_sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
+    if expected_sha256.len() != 64
+        || !expected_sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
     {
         bail!("MFR integrity metadata must be a 64-character SHA-256 hex digest");
     }
@@ -18,21 +19,33 @@ pub fn verify_payload(path: &Path, expected_sha256: &str) -> Result<()> {
 
 pub fn select_runtime(m: &MhfManifest) -> &'static str {
     match m.runtime.as_str() {
-        "mar" => "Maha Android Runtime",
-        "linux" => "Nila Linux Runtime",
-        "native" => "Nila Native Runtime",
+        "mar" => "Maha Android Runtime (not implemented)",
+        "linux" => "Nila Linux Runtime (not implemented)",
+        "native" => "Nila Native Runtime (not implemented)",
         _ => "Unsupported Runtime Adapter",
     }
 }
 
+/// Fail closed: this crate currently has runtime labels, not an implemented
+/// executor. A manifest's supported flag is untrusted input and cannot by
+/// itself authorize execution.
 pub fn authorize(m: &MhfManifest) -> Result<()> {
     if !m.supported {
         bail!("The application is not supported by this Nila build");
     }
+    if m.name.trim().is_empty() || m.version.trim().is_empty() {
+        bail!("MHF manifest name and version must not be empty");
+    }
     if m.sha256.len() != 64 || !m.sha256.bytes().all(|byte| byte.is_ascii_hexdigit()) {
         bail!("MHF package must contain a valid SHA-256 integrity digest");
     }
-    Ok(())
+
+    match m.runtime.as_str() {
+        "mar" | "linux" | "native" => {
+            bail!("Runtime '{}' is not implemented; refusing execution", m.runtime)
+        }
+        _ => bail!("Unsupported runtime '{}'; refusing execution", m.runtime),
+    }
 }
 
 #[cfg(test)]
@@ -43,6 +56,9 @@ mod tests {
         fs,
         time::{SystemTime, UNIX_EPOCH},
     };
+
+    const VALID_SHA256: &str =
+        "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad";
 
     fn manifest(sha256: &str, supported: bool) -> MhfManifest {
         MhfManifest {
@@ -70,23 +86,17 @@ mod tests {
     }
 
     #[test]
-    fn selects_android_runtime() {
+    fn selects_android_runtime_but_marks_it_unimplemented() {
         assert_eq!(
-            select_runtime(&manifest(
-                "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-                true
-            )),
-            "Maha Android Runtime"
+            select_runtime(&manifest(VALID_SHA256, true)),
+            "Maha Android Runtime (not implemented)"
         );
     }
 
     #[test]
     fn verifies_matching_payload_digest() {
         let path = temp_payload(b"abc");
-        let result = verify_payload(
-            &path,
-            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-        );
+        let result = verify_payload(&path, VALID_SHA256);
         let _ = fs::remove_file(path);
         assert!(result.is_ok());
     }
@@ -94,10 +104,7 @@ mod tests {
     #[test]
     fn accepts_uppercase_hex_digest() {
         let path = temp_payload(b"abc");
-        let result = verify_payload(
-            &path,
-            "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD",
-        );
+        let result = verify_payload(&path, &VALID_SHA256.to_ascii_uppercase());
         let _ = fs::remove_file(path);
         assert!(result.is_ok());
     }
@@ -125,10 +132,26 @@ mod tests {
 
     #[test]
     fn authorization_rejects_unsupported_applications() {
-        assert!(authorize(&manifest(
-            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-            false
-        ))
-        .is_err());
+        assert!(authorize(&manifest(VALID_SHA256, false)).is_err());
+    }
+
+    #[test]
+    fn authorization_fails_closed_for_unimplemented_runtime() {
+        let error = authorize(&manifest(VALID_SHA256, true)).unwrap_err();
+        assert!(error.to_string().contains("not implemented"));
+    }
+
+    #[test]
+    fn authorization_rejects_unknown_runtime() {
+        let mut app = manifest(VALID_SHA256, true);
+        app.runtime = "made-up-runtime".into();
+        assert!(authorize(&app).is_err());
+    }
+
+    #[test]
+    fn authorization_rejects_empty_metadata() {
+        let mut app = manifest(VALID_SHA256, true);
+        app.name = "  ".into();
+        assert!(authorize(&app).is_err());
     }
 }
