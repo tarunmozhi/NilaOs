@@ -1,18 +1,13 @@
 use anyhow::{bail, Result};
-use mhr_core::MhfManifest;
-use sha2::{Digest, Sha256};
-use std::{fs, path::Path};
+use mhr_core::{sha256_file, MhfManifest};
+use std::path::Path;
 
 pub fn verify_payload(path: &Path, expected_sha256: &str) -> Result<()> {
     if !is_sha256_hex(expected_sha256) {
         bail!("MHF integrity metadata must be a 64-character SHA-256 hex digest");
     }
 
-    let data = fs::read(path)?;
-    let mut h = Sha256::new();
-    h.update(data);
-    let actual = format!("{:x}", h.finalize());
-
+    let actual = sha256_file(path)?;
     if !actual.eq_ignore_ascii_case(expected_sha256) {
         bail!("MFR integrity verification failed");
     }
@@ -20,18 +15,21 @@ pub fn verify_payload(path: &Path, expected_sha256: &str) -> Result<()> {
 }
 
 fn is_sha256_hex(value: &str) -> bool {
-    value.len() == 64 && value.bytes().all(|b| b.is_ascii_hexdigit())
+    value.len() == 64 && value.bytes().all(|byte| byte.is_ascii_hexdigit())
 }
 
 pub fn select_runtime(m: &MhfManifest) -> &'static str {
     match m.runtime.as_str() {
-        "mar" if m.platform == "android" => "Maha Android Runtime",
-        "linux" if m.platform == "linux" => "Nila Linux Runtime",
-        "native" if m.platform == "nila" => "Nila Native Runtime",
+        "mar" if m.platform == "android" => "Maha Android Runtime (not implemented)",
+        "linux" if m.platform == "linux" => "Nila Linux Runtime (not implemented)",
+        "native" if m.platform == "nila" => "Nila Native Runtime (not implemented)",
         _ => "Unsupported Runtime Adapter",
     }
 }
 
+/// Validate basic manifest metadata but never authorize execution until a real,
+/// sandboxed runtime and signed-package verification are integrated. The
+/// current baseline must not treat a recognized runtime name as an executor.
 pub fn authorize(m: &MhfManifest) -> Result<()> {
     if !m.supported {
         bail!("The application is not supported by this Nila build");
@@ -39,13 +37,14 @@ pub fn authorize(m: &MhfManifest) -> Result<()> {
     if !is_sha256_hex(&m.sha256) {
         bail!("MHF package must contain a valid 64-character SHA-256 digest");
     }
-    if select_runtime(m) == "Unsupported Runtime Adapter" {
-        bail!("MHF package requests an unsupported or mismatched runtime/platform");
-    }
     if m.name.trim().is_empty() || m.version.trim().is_empty() {
         bail!("MHF package name and version must not be empty");
     }
-    Ok(())
+    if select_runtime(m) == "Unsupported Runtime Adapter" {
+        bail!("MHF package requests an unsupported or mismatched runtime/platform");
+    }
+
+    bail!("Runtime execution is not implemented; refusing to authorize package")
 }
 
 #[cfg(test)]
@@ -67,10 +66,10 @@ mod tests {
     }
 
     #[test]
-    fn selects_android_runtime() {
+    fn identifies_android_runtime_without_claiming_it_exists() {
         let m = manifest("mar", "android", &"a".repeat(64));
-        assert_eq!(select_runtime(&m), "Maha Android Runtime");
-        assert!(authorize(&m).is_ok());
+        assert_eq!(select_runtime(&m), "Maha Android Runtime (not implemented)");
+        assert!(authorize(&m).is_err());
     }
 
     #[test]

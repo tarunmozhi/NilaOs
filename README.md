@@ -1,47 +1,47 @@
 # Nila OS
 
-Nila OS is a mobile-first operating-system engineering project targeting the vivo Y11 / vivo 1906 reference platform.
+Nila OS is a mobile-first operating-system engineering project. The initial device reference is the vivo Y11 (vivo 1906 / PD1930F, Qualcomm Snapdragon 439, ARM64). PC/Linux/VM environments are development and testing hosts only.
 
 This repository is an engineering baseline. It is **not yet a bootable phone image**.
 
-## Reference device
-- vivo Y11 / vivo 1906
-- PD1930F
-- Qualcomm Snapdragon 439 / SDM439
-- 8x ARM Cortex-A53
-- 3 GB RAM
-- 32 GB eMMC 5.1
-- 720x1544 @ 60 Hz
+## Current baseline
 
-## Core components
-- MHR Core / MHR Runtime
-- MHF package metadata
-- MFR-Nila runtime selector and integrity checks
-- Nila Security policy
-- Nila service registry and bootstrap validation
-- MHR CLI
-- vivo 1906 reference profile
-- GitHub Actions CI checks
+- MHR file-format recognition and bounded-memory SHA-256 hashing
+- MHF manifest metadata generation
+- MFR runtime identification, payload integrity checking, and fail-closed execution authorization
+- Nila security policy validation and startup service-list checks
+- MHR command-line tool
+- vivo 1906 reference profile and guarded kernel-build helper
+- GitHub Actions checks for Rust code, device metadata, and build-helper input guards
 
-## Build and test existing components
+## Safety and compatibility boundaries
 
-On a host with Rust stable and Python 3.11 or newer:
+- Recognizing an EXE, APP, APK, or SH extension does not translate or execute the application.
+- No application runtime is implemented in this baseline. MFR refuses execution, even when manifest metadata looks valid.
+- Package signature verification is not yet integrated into main; do not treat manifests as trusted installation artifacts.
+- Rust policy checks and service lists are not kernel enforcement. SELinux, application sandboxing, verified boot, and device security require platform integration.
+- Keep private signing keys out of this repository, command-line arguments, and device images.
 
-    python3 scripts/validate-device-profile.py
-    bash -n scripts/build-kernel.sh
-    cargo fmt --all -- --check
-    cargo test --workspace
-    cargo build --workspace
-    cargo clippy --workspace -- -D warnings
+## Build and test
 
-The kernel helper requires an independently obtained, device-compatible Linux kernel tree and its verified defconfig. It does not download a kernel or package a phone image.
+Run from the repository root:
 
-## Bootable device build
+```bash
+python3 scripts/validate-device-profile.py
+python3 -m unittest discover -s tests -p 'test_*.py'
+bash -n scripts/build-kernel.sh
+cargo fmt --all -- --check
+cargo test --workspace
+cargo build --workspace
+cargo clippy --workspace -- -D warnings
+```
 
-See [docs/BOOTABLE_BUILD.md](docs/BOOTABLE_BUILD.md) for the staged engineering plan and required device-specific inputs. See [device/vivo/1906/README.md](device/vivo/1906/README.md) for hardware integration requirements.
+The kernel helper requires an independently obtained kernel tree verified for this exact device and its exact defconfig. It does not download or invent missing vendor sources:
 
-## Compatibility limitation
+```bash
+KERNEL_SRC=/absolute/path/to/verified/kernel \
+KERNEL_DEFCONFIG=YOUR_VERIFIED_DEFCONFIG \
+./scripts/build-kernel.sh
+```
 
-MHR recognizes EXE, APP, APK and SH formats, but recognition is not universal binary translation. APK support depends on the Maha Android Runtime and available Android/vendor compatibility. EXE/APP execution is not implemented by this baseline.
-
-Do not install or flash a build until device-specific boot images, recovery, partition compatibility, integrity checks, and a recovery path have been verified.
+A successful Rust build or kernel compile does **not** prove phone bootability. See [Build Requirements](docs/BOOTABLE_BUILD.md), [Current Status](docs/STATUS.md), and [Roadmap](docs/ROADMAP.md).

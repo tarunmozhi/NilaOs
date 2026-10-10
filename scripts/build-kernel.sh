@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # Build from an already obtained, device-compatible Linux kernel tree.
-ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 KERNEL_SRC="${KERNEL_SRC:-}"
 KERNEL_DEFCONFIG="${KERNEL_DEFCONFIG:-}"
 OUT_DIR="${OUT_DIR:-$ROOT/out/kernel}"
@@ -19,7 +19,7 @@ Required:
 
 Optional:
   OUT_DIR             Output directory (default: out/kernel)
-  JOBS                Parallel build jobs (default: available CPU count)
+  JOBS                Positive integer build parallelism (default: available CPU count)
 
 A successful compile does not establish bootability: vendor modules, firmware,
 device tree selection, boot image packaging, AVB and partition compatibility
@@ -33,10 +33,19 @@ if [[ -z "$KERNEL_SRC" || -z "$KERNEL_DEFCONFIG" ]]; then
   usage >&2
   exit 2
 fi
+if [[ ! "$KERNEL_DEFCONFIG" =~ ^[A-Za-z0-9._-]+$ ]]; then
+  echo "ERROR: KERNEL_DEFCONFIG must be a plain defconfig filename, not a path." >&2
+  exit 2
+fi
+if [[ ! "$JOBS" =~ ^[1-9][0-9]*$ ]]; then
+  echo "ERROR: JOBS must be a positive integer." >&2
+  exit 2
+fi
 if [[ ! -d "$KERNEL_SRC" || ! -f "$KERNEL_SRC/Makefile" ]]; then
   echo "ERROR: KERNEL_SRC must point to a Linux kernel source tree." >&2
   exit 2
 fi
+KERNEL_SRC="$(cd -- "$KERNEL_SRC" && pwd -P)"
 if [[ ! -f "$KERNEL_SRC/arch/arm64/configs/$KERNEL_DEFCONFIG" ]]; then
   echo "ERROR: defconfig not found: arch/arm64/configs/$KERNEL_DEFCONFIG" >&2
   exit 2
@@ -51,7 +60,14 @@ if ! command -v aarch64-linux-gnu-gcc >/dev/null 2>&1; then
 fi
 
 mkdir -p "$OUT_DIR"
-OUT_DIR="$(cd "$OUT_DIR" && pwd)"
+OUT_DIR="$(cd -- "$OUT_DIR" && pwd -P)"
+case "$OUT_DIR/" in
+  "$KERNEL_SRC/"*)
+    echo "ERROR: OUT_DIR must be outside the kernel source tree." >&2
+    exit 2
+    ;;
+esac
+
 make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- "$KERNEL_DEFCONFIG"
 make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j"$JOBS" Image.gz dtbs
 
