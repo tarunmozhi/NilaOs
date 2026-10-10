@@ -30,8 +30,11 @@ jobs:
       - name: Test device profile validator
         run: python3 -m unittest discover -s tests -p 'test_*.py'
 
-      - name: Check kernel build helper syntax
-        run: bash -n scripts/build-kernel.sh tests/test-build-kernel-helper.sh
+      - name: Check build helper syntax
+        run: bash -n scripts/build-kernel.sh tests/test-build-kernel-helper.sh scripts/build-rootfs.sh tests/test-build-rootfs-helper.sh
+
+      - name: Test rootfs helper safety guards
+        run: bash tests/test-build-rootfs-helper.sh
 
       - name: Test kernel build helper with mocked tools
         run: bash tests/test-build-kernel-helper.sh
