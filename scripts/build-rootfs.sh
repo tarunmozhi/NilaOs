@@ -6,7 +6,7 @@ set -Eeuo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SUITE="${SUITE:-bookworm}"
 MIRROR="${MIRROR:-https://deb.debian.org/debian}"
-ROOTFS_DIR="${ROOTFS_DIR:-$ROOT/out/rootfs-arm64}"
+ROOTFS_DIR="${ROOTFS_DIR:-${HOME:-/tmp}/nila-rootfs-arm64}"
 ARCH=arm64
 
 usage() {
