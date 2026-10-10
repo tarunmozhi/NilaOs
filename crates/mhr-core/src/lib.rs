@@ -146,7 +146,10 @@ pub fn create_manifest(a: &Analysis, name: &str, version: &str) -> MhfManifest {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{fs, time::{SystemTime, UNIX_EPOCH}};
+    use std::{
+        fs,
+        time::{SystemTime, UNIX_EPOCH},
+    };
 
     fn temp_file(contents: &[u8], extension: &str) -> PathBuf {
         let nonce = SystemTime::now()
@@ -163,17 +166,26 @@ mod tests {
 
     #[test]
     fn detects_apk() {
-        assert_eq!(detect_format(Path::new("application.apk")), InputFormat::Apk);
+        assert_eq!(
+            detect_format(Path::new("application.apk")),
+            InputFormat::Apk
+        );
     }
 
     #[test]
     fn detects_exe() {
-        assert_eq!(detect_format(Path::new("application.exe")), InputFormat::Exe);
+        assert_eq!(
+            detect_format(Path::new("application.exe")),
+            InputFormat::Exe
+        );
     }
 
     #[test]
     fn detects_shell() {
-        assert_eq!(detect_format(Path::new("application.sh")), InputFormat::Shell);
+        assert_eq!(
+            detect_format(Path::new("application.sh")),
+            InputFormat::Shell
+        );
     }
 
     #[test]
@@ -193,7 +205,10 @@ mod tests {
             let path = temp_file(b"placeholder", extension);
             let result = analyze(&path);
             let _ = fs::remove_file(path);
-            assert!(!result.unwrap().supported, "{extension} runtime is not implemented");
+            assert!(
+                !result.unwrap().supported,
+                "{extension} runtime is not implemented"
+            );
         }
     }
 }
