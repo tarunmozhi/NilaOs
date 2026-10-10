@@ -7,8 +7,9 @@ This repository is an engineering baseline. It is **not yet a bootable phone ima
 ## Current baseline
 
 - MHR file-format recognition and bounded-memory SHA-256 hashing
-- MHF manifest metadata generation
-- MFR runtime identification, payload integrity checking, and fail-closed execution authorization
+- MHF manifest metadata generation with optional detached Ed25519 signature metadata
+- MFR trusted-key signature verification and payload digest checking
+- Fail-closed execution authorization while application runtimes are absent
 - Nila security policy validation and startup service-list checks
 - MHR command-line tool
 - vivo 1906 reference profile and guarded kernel-build helper
@@ -17,10 +18,10 @@ This repository is an engineering baseline. It is **not yet a bootable phone ima
 ## Safety and compatibility boundaries
 
 - Recognizing an EXE, APP, APK, or SH extension does not translate or execute the application.
-- No application runtime is implemented in this baseline. MFR refuses execution, even when manifest metadata looks valid.
-- Package signature verification is not yet integrated into main; do not treat manifests as trusted installation artifacts.
+- No application runtime is implemented in this baseline. MFR refuses execution, even when manifest metadata has a valid trusted signature.
+- The trusted public-key store is `config/nila-trusted-keys.toml`. It is intentionally empty by default, so no signer is trusted until a public key is provisioned.
+- The repository does not implement a production signing command, key rotation/revocation, or a release-key lifecycle. Keep signing private keys offline; never commit them.
 - Rust policy checks and service lists are not kernel enforcement. SELinux, application sandboxing, verified boot, and device security require platform integration.
-- Keep private signing keys out of this repository, command-line arguments, and device images.
 
 ## Build and test
 
@@ -35,6 +36,26 @@ cargo test --workspace
 cargo build --workspace
 cargo clippy --workspace -- -D warnings
 ```
+
+Create unsigned manifest metadata:
+
+```bash
+cargo run -p mhr-cli -- manifest ./payload.apk ExampleApp 0.1.0
+```
+
+Verify a signed manifest against explicitly trusted public keys:
+
+```bash
+cargo run -p mhr-cli -- verify-manifest manifest.json config/nila-trusted-keys.toml
+```
+
+Verify the signed manifest and exact payload bytes together:
+
+```bash
+cargo run -p mhr-cli -- verify-package manifest.json ./payload.bin config/nila-trusted-keys.toml
+```
+
+These commands verify metadata and payload integrity; they do not install or execute the application.
 
 The kernel helper requires an independently obtained kernel tree verified for this exact device and its exact defconfig. It does not download or invent missing vendor sources:
 
