@@ -3,8 +3,7 @@ use mhr_core::{sha256_file, MhfManifest};
 use std::path::Path;
 
 pub fn verify_payload(path: &Path, expected_sha256: &str) -> Result<()> {
-    if expected_sha256.len() != 64
-        || !expected_sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
+    if expected_sha256.len() != 64 || !expected_sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
     {
         bail!("MFR integrity metadata must be a 64-character SHA-256 hex digest");
     }
@@ -40,7 +39,10 @@ pub fn authorize(m: &MhfManifest) -> Result<()> {
 mod tests {
     use super::*;
     use mhr_core::InputFormat;
-    use std::{fs, time::{SystemTime, UNIX_EPOCH}};
+    use std::{
+        fs,
+        time::{SystemTime, UNIX_EPOCH},
+    };
 
     fn manifest(sha256: &str, supported: bool) -> MhfManifest {
         MhfManifest {
@@ -61,10 +63,8 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        let path = std::env::temp_dir().join(format!(
-            "mfr-nila-{}-{nonce}.bin",
-            std::process::id()
-        ));
+        let path =
+            std::env::temp_dir().join(format!("mfr-nila-{}-{nonce}.bin", std::process::id()));
         fs::write(&path, contents).unwrap();
         path
     }
