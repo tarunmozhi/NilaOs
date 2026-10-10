@@ -202,16 +202,16 @@ pub struct ActionRequest {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PolicyDecision {
     pub allowed: bool,
-    pub reason: &'static str,
+    pub reason: String,
 }
 
 impl PolicyDecision {
     fn deny(reason: &'static str) -> Self {
-        Self { allowed: false, reason }
+        Self { allowed: false, reason: reason.to_owned() }
     }
 
     fn allow(reason: &'static str) -> Self {
-        Self { allowed: true, reason }
+        Self { allowed: true, reason: reason.to_owned() }
     }
 }
 
