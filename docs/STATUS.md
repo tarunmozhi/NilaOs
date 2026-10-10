@@ -4,6 +4,8 @@
 
 Nila OS is a mobile Linux operating-system project: Linux kernel plus native Linux userspace, with a Nila graphical shell. It is not Android or AOSP. The vivo device profile's Android/Funtouch values refer to the phone's stock firmware only.
 
+Nila Assistant is intended to be an internet-connected, voice-first AI assistant that can search online and operate apps and account sessions when enabled by the user. It is intended to support call handling and user-selected voice features through permission-checked system APIs. The user should control access by app, account, and capability. Banking, RailOne, and similar apps must remain in separate non-root sandboxes; Assistant access is opt-in and cannot bypass those boundaries.
+
 The current repository is an engineering baseline, not a Linux distribution or bootable phone image.
 
 ## Implemented in the current code baseline
@@ -31,6 +33,7 @@ These code checks and registries do not provide a running kernel, userspace, ini
 - The runtime names are identifiers only. No native Linux, Android compatibility, EXE, or APP execution is implemented.
 - Policy validation and service-list construction do not enforce Linux security modules or create operating-system services.
 - Hash verification checks payload bytes against a supplied digest; it does not establish who supplied the digest or whether the payload is safe.
+- The Assistant's listed service is an unprivileged registry entry only. There is no Assistant runtime, internet integration, credential/session broker, account-operation interface, call-control integration, voice-processing service, or per-app permission UI.
 
 ## Not yet implemented / verified
 
@@ -43,7 +46,10 @@ These code checks and registries do not provide a running kernel, userspace, ini
 - Full enforcing Linux security policy integrated with device services
 - Real MHF archive/package format and transactional installer (signature verification currently covers manifest metadata plus a signed payload digest, not archive parsing)
 - Native Linux application runtime and optional Maha Android Runtime (MAR)
+- Separate enforced non-root app sandboxes, including profiles for banking and RailOne apps
+- User-controlled systemless root mechanism that keeps root unavailable to apps and assistant processes
 - Nila Skin as a native Linux graphical shell and system UI
+- Nila Assistant runtime, internet access, voice interaction, app/account permission controls, protected credential/session broker, call control, and approved voice features
 - Installer runtime and External Memory runtime
 - Telephony/camera/audio/GNSS hardware integration
 - Device-specific Linux boot and root filesystem image packaging
