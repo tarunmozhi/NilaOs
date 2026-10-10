@@ -30,14 +30,23 @@ jobs:
       - name: Test device profile validator
         run: python3 -m unittest discover -s tests -p 'test_*.py'
 
-      - name: Check kernel build helper syntax
-        run: bash -n scripts/build-kernel.sh tests/test-build-kernel-helper.sh
+      - name: Check build helper syntax
+        run: bash -n scripts/build-kernel.sh tests/test-build-kernel-helper.sh scripts/build-rootfs.sh tests/test-build-rootfs-helper.sh scripts/inspect-kernel-source.sh tests/test-inspect-kernel-source.sh
+
+      - name: Test rootfs helper safety guards
+        run: bash tests/test-build-rootfs-helper.sh
+
+      - name: Test kernel source inspector
+        run: bash tests/test-inspect-kernel-source.sh
 
       - name: Test kernel build helper with mocked tools
         run: bash tests/test-build-kernel-helper.sh
 
       - name: Check kernel build helper usage
         run: bash scripts/build-kernel.sh --help
+
+      - name: Check kernel source inspector usage
+        run: bash scripts/inspect-kernel-source.sh --help
 
       - name: Reject unsafe kernel build inputs
         shell: bash
