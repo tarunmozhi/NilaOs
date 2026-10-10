@@ -24,7 +24,7 @@ The current repository is an engineering baseline, not a Linux distribution or b
 - Nila service registry and startup-policy validation
 - MHR command-line tool
 - vivo 1906 reference profile with schema validation and regression tests
-- Guarded ARM64 Linux kernel-build helper with defconfig and job-count validation
+- Guarded ARM64 Linux kernel-build helper with configurable cross-compiler prefix and checked `Image.gz-dtb` output
 - Nila Skin browser preview with user-toggleable, draggable, customizable Easy Touch shortcuts
 
 These code checks, registries, and preview do not provide a running kernel, userspace, init system, service enforcement, or native phone UI.
@@ -57,9 +57,9 @@ These code checks, registries, and preview do not provide a running kernel, user
 
 ## Not yet implemented / verified
 
-- Verified vivo 1906 Linux kernel source and exact PD1930F configuration
+- Verified mapping from the reported `PD1930CF_EX_A_6.71.15` build to the candidate Y11 source's `PD1930F_EX` or `PD1930BF_EX` board overlay, exact boot configuration, and stock boot chain. A local candidate tree reports Linux 4.9.227 and SDM439 support, but its mirror provenance and exact CF compatibility are not verified; it is not included or built in this repository.
 - Native Linux root filesystem, early userspace, init/service manager, and boot-time services
-- Device tree/DTBO, kernel modules, firmware, and verified partition map
+- Device tree/DTBO selection, kernel modules, firmware, and verified partition map
 - Linux device drivers and hardware integration
 - Recovery environment and verified restore path
 - Verified boot integration for the device's actual boot chain
@@ -76,6 +76,4 @@ These code checks, registries, and preview do not provide a running kernel, user
 - Device-specific Linux boot and root filesystem image packaging
 - Bootable phone image and real-device boot/hardware tests
 
-Device firmware or vendor components may be needed to support specific hardware, but an Android framework is not part of the Nila OS base. These additions validate configuration and provide a guarded kernel build entry point; they do not provide a kernel source tree, Linux userspace, boot image, or hardware testing.
-
-Do not describe this repository as a bootable Nila OS until a device-specific Linux image has been built and its boot and hardware behavior have been tested and documented. See [BOOTABLE_BUILD.md](BOOTABLE_BUILD.md).
+Device firmware or vendor components may be needed to support specific hardware, but an Android framework is not part of the Nila OS base. The GitHub repository still does not include the candidate kernel tree, Linux userspace, boot image, or hardware testing. Do not describe Nila as bootable until a device-specific Linux image has been built and its boot and hardware behavior tested and documented. See [BOOTABLE_BUILD.md](BOOTABLE_BUILD.md).
