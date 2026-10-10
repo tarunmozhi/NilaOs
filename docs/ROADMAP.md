@@ -1,8 +1,10 @@
 # Nila OS Engineering Roadmap
 
-## Target
+## Target architecture
 
-Nila OS is a mobile-only deployment project, initially targeting vivo Y11 / vivo 1906 (PD1930F), Qualcomm Snapdragon 439 / SDM439, ARM64, 3 GB RAM, 32 GB eMMC, and a 720×1544 display. PC/Linux/VM environments are development and test hosts only.
+Nila OS is a mobile-only, Linux-based operating-system project. The intended system is a Linux kernel with a native Linux userspace and Nila mobile shell; it is not Android or an AOSP distribution. The vivo Y11 / vivo 1906 (PD1930F), Qualcomm Snapdragon 439 / SDM439, ARM64, 3 GB RAM, 32 GB eMMC, and 720×1544 display are the initial hardware target. Its installed Android/Funtouch firmware is a device reference only. PC/Linux/VM environments are development and test hosts.
+
+See [Target Architecture](ARCHITECTURE.md) for the system boundary and current implementation limits.
 
 ## Milestone 0 — Safe engineering baseline
 
@@ -15,38 +17,45 @@ Nila OS is a mobile-only deployment project, initially targeting vivo Y11 / vivo
 - [x] Guarded kernel build helper and build-input checks
 - [x] Lockfile committed and CI enforces locked dependency resolution
 
-## Milestone 1 — MHF package pipeline
+## Milestone 1 — Linux system foundation
+
+- [ ] Select and document the Linux userspace, init/service manager, and base system composition
+- [ ] Define the native root filesystem layout, boot-time service startup, logs, storage, and update model
+- [ ] Add a reproducible build that combines the verified device kernel with the native Linux root filesystem
+- [ ] Establish a recovery and rollback design before writing device partitions
+
+## Milestone 2 — MHF package pipeline and native applications
 
 - [ ] Define a versioned MHF container format, including canonical manifest encoding and payload layout
 - [ ] Implement a streaming package reader with strict size limits and archive path traversal protection
 - [ ] Add safe staging, fsync, atomic commit/rollback, and TOCTOU protection
 - [ ] Add malformed-container fuzz tests and property tests
 - [ ] Define release signing, key rotation, revocation, and recovery procedures
-
-## Milestone 2 — Runtime and app compatibility
-
-- [ ] Implement Maha Android Runtime (MAR) with Android API and ABI compatibility boundaries
-- [ ] Implement an approved Linux runtime with strict sandboxing
+- [ ] Implement an approved native Linux application runtime with strict sandboxing
+- [ ] Keep Android APK compatibility as a separate optional runtime; it is not part of the Linux boot or base userland
 - [ ] Keep EXE and APP recognition separate from translation or execution support
-- [ ] Integrate per-UID isolation, SELinux domains, storage/network policies, and runtime resource limits
-- [ ] Add runtime-specific conformance and security tests
+- [ ] Integrate per-UID isolation, Linux security policy, storage/network policies, and runtime resource limits
 
-## Milestone 3 — vivo 1906 device bring-up
+## Milestone 3 — vivo 1906 Linux bring-up
 
-- [ ] Obtain and verify the exact device-compatible SDM439 kernel source and PD1930F defconfig
-- [ ] Identify matching device tree/DTBO, partition map, boot image layout, and vendor module requirements
-- [ ] Integrate legally obtained Qualcomm vendor blobs, HALs, and firmware
-- [ ] Build a recovery environment and verify a safe restore path
-- [ ] Integrate Android framework/vendor configuration and hardware services
-- [ ] Integrate AVB/verified boot and a complete enforcing SELinux policy
+- [ ] Obtain and verify the exact device-compatible Linux kernel source and PD1930F configuration
+- [ ] Identify the bootloader path, device tree/DTBO, partition map, boot image layout, and required kernel modules
+- [ ] Build early userspace and a native Linux root filesystem with device-specific mounts and service startup
+- [ ] Integrate kernel drivers and legally obtained firmware needed for the target hardware; use closed vendor components only where required and validated
+- [ ] Implement recovery and prove a safe restore path
+- [ ] Integrate verified boot where the device boot chain supports a verifiable Nila image
+- [ ] Implement and enforce the selected Linux security policy
 - [ ] Validate display, touch, modem, dual SIM, Wi-Fi, Bluetooth, GNSS, camera, audio, fingerprint, USB/OTG, and power management
 
-## Milestone 4 — UI and installation
+An Android framework or AOSP product tree is not a prerequisite for the Nila Linux base. Stock firmware, Android-derived firmware, or vendor components may be examined as hardware references or used as separately validated components when licensing and compatibility allow.
 
-- [ ] Implement the Nila Skin mobile shell and SystemUI runtime
-- [ ] Implement the graphical installer, compatibility gate, backup, verification, migration, and rollback
-- [ ] Integrate Nila Security Center, Vault, and External Memory runtime
-- [ ] Package a device-specific boot image only after kernel, recovery, partition, and integrity checks are verified
+## Milestone 4 — Linux mobile UI and installation
+
+- [ ] Implement Nila Skin as the shell and system UI for Nila's Linux graphical session
+- [ ] Connect UI actions to permission-checked native Nila services
+- [ ] Implement the installer, compatibility gate, backup, verification, migration, and rollback
+- [ ] Integrate Nila Security Center, Vault, and External Memory with native services
+- [ ] Package a device-specific Linux boot and root filesystem image only after kernel, recovery, partition, and integrity checks are verified
 
 ## Release gates
 
