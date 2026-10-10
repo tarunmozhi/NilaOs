@@ -13,7 +13,7 @@ Open `index.html` directly in a desktop or mobile browser. No build tools, netwo
 - Control Center with interactive quick-setting tiles and brightness slider
 - Notifications with All / Unread / Silent filters and clear action
 - Settings navigation and filtering
-- Easy Touch floating shortcut widget, enabled by default, with customizable app and settings shortcuts
+- Edge-peeking Easy Touch floating widget, enabled by default, with a user toggle and customizable app and settings shortcuts; hover or keyboard focus reveals the button
 - Performance metrics and power-mode selector (sample values only)
 - External Memory choices: Off, Phone Storage, SD Card, Automatic, Custom
 - Security & Privacy, Nila Vault, and guarded recovery / power menus
