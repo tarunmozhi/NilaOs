@@ -50,7 +50,7 @@ KERNEL_DEFCONFIG="test_defconfig" \
 CROSS_COMPILE="$CROSS_COMPILE" \
 OUT_DIR="$OUT_DIR" \
 JOBS=2 \
-"$ROOT/scripts/build-kernel.sh"
+bash "$ROOT/scripts/build-kernel.sh"
 
 [[ -s "$OUT_DIR/arch/arm64/boot/Image.gz-dtb" ]]
 grep -F "CROSS_COMPILE=$CROSS_COMPILE" "$MAKE_LOG" >/dev/null
@@ -61,7 +61,7 @@ if PATH="$TOOL_BIN:$PATH" \
    KERNEL_DEFCONFIG="test_defconfig" \
    CROSS_COMPILE='invalid;command-' \
    OUT_DIR="$TEMP_ROOT/invalid-output" \
-   "$ROOT/scripts/build-kernel.sh" >/dev/null 2>&1; then
+   bash "$ROOT/scripts/build-kernel.sh" >/dev/null 2>&1; then
   echo "ERROR: unsafe CROSS_COMPILE value was accepted" >&2
   exit 1
 fi
