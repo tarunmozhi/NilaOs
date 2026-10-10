@@ -27,7 +27,7 @@ This repository is an engineering baseline. It is **not yet a bootable phone ima
 - Unknown, missing, malformed, or untrusted package signatures are rejected by the signature-verification API.
 - The trusted public-key store is `config/nila-trusted-keys.toml`. It is deliberately empty by default and therefore trusts no signer until an operator provisions a public key.
 - Keep signing private keys offline. Never put private keys in this repository, the device image, or command-line arguments.
-- Signature verification authenticates signed manifest metadata; payload integrity must also be checked against the manifest digest.
+- `verify-package` verifies both the signed manifest and payload SHA-256 digest.
 - A valid signature does **not** make an unsupported application safe or executable. MFR authorization still refuses execution because actual runtimes are not implemented.
 - Rust policy checks and service lists are not kernel enforcement. SELinux, sandboxing, verified boot, and device security require platform integration.
 
@@ -46,10 +46,18 @@ cargo build --workspace
 cargo clippy --workspace -- -D warnings
 ```
 
-Verify a signed manifest's metadata with the CLI:
+Verify signed manifest metadata:
 
 ```bash
-cargo run -p mhr-cli -- verify-manifest path/to/manifest.json config/nila-trusted-keys.toml
+cargo run -p mhr-cli -- verify-manifest manifest.json config/nila-trusted-keys.toml
 ```
 
-A successful signature check is not an installation or runtime test. See `docs/STATUS.md` for the implementation boundary and remaining work.
+Verify signed metadata and the exact payload digest together:
+
+```bash
+cargo run -p mhr-cli -- verify-package manifest.json ./payload.bin config/nila-trusted-keys.toml
+```
+
+See [Build and Test](docs/BUILD_AND_TEST.md), [Current Status](docs/STATUS.md), and [Engineering Roadmap](docs/ROADMAP.md).
+
+Passing Rust CI validates this code baseline only. It does not mean that a bootable image exists or that phone hardware has been tested.
