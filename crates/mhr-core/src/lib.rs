@@ -31,6 +31,7 @@ pub struct Analysis {
 /// Detached Ed25519 signature metadata. The private signing key must never be
 /// stored in the repository or on a production device.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
 pub struct PackageSignature {
     pub key_id: String,
     /// Lowercase or uppercase hexadecimal encoding of a 64-byte Ed25519 signature.
@@ -126,6 +127,7 @@ pub fn analyze(path: impl AsRef<Path>) -> anyhow::Result<Analysis> {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct MhfManifest {
     pub name: String,
     pub version: String,
