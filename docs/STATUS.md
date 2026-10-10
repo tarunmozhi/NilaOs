@@ -7,6 +7,8 @@
 - MHF manifest metadata generation
 - MFR runtime identification and payload integrity verification
 - Fail-closed execution authorization while application runtimes are absent
+- Ed25519 verification for signed MHF manifest metadata against an explicitly provisioned trusted-key store
+- Combined CLI verification of signed manifest metadata and exact payload SHA-256
 - Basic Nila security policy validation
 - Nila service registry and startup-policy validation
 - MHR command-line tool
@@ -14,7 +16,8 @@
 - Guarded ARM64 kernel-build helper with defconfig and job-count validation
 
 ## Important security limits
-- Package signature verification is not integrated into main; manifests are not trusted installation artifacts.
+- The trusted-key store is empty by default; no signer is trusted until a public key is provisioned.
+- Production signing-key generation, rotation, revocation, and release signing are not implemented.
 - The runtime names are identifiers only. No APK/MAR, Linux, native, EXE, or APP execution is implemented.
 - Policy validation and service-list construction do not enforce SELinux or create operating-system services.
 - Hash verification checks payload bytes against a supplied digest; it does not establish who supplied the digest or whether the payload is safe.
@@ -28,7 +31,7 @@
 - Verified boot / AVB signing integration
 - Full enforcing SELinux policy integrated with device services
 - Android framework/vendor compatibility and product configuration
-- Real MHF archive/package format and cryptographic package-signature enforcement
+- Real MHF archive/package format and transactional installer (signature verification currently covers manifest metadata plus a signed payload digest, not archive parsing)
 - Maha Android Runtime (MAR)
 - Nila SystemUI runtime
 - Installer runtime
