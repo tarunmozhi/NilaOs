@@ -4,7 +4,7 @@
 
 Nila OS is a mobile-only, Linux-based operating-system project. The intended system is a Linux kernel with a native Linux userspace and Nila mobile shell; it is not Android or an AOSP distribution. The vivo Y11 / vivo 1906 (PD1930F), Qualcomm Snapdragon 439 / SDM439, ARM64, 3 GB RAM, 32 GB eMMC, and 720×1544 display are the initial hardware target. Its installed Android/Funtouch firmware is a device reference only. PC/Linux/VM environments are development and test hosts.
 
-See [Target Architecture](ARCHITECTURE.md) for the system boundary and current implementation limits.
+The base system milestone below remains the foundation. After it, the project targets Nila Skin and Easy Touch, app runtimes, Nila Browser, Nila Assistant, security controls, external memory, installation, updates, and recovery. See [Target Architecture](ARCHITECTURE.md) for the full design and current implementation limits. Target features are not completed features.
 
 ## Milestone 0 — Safe engineering baseline
 
@@ -24,17 +24,20 @@ See [Target Architecture](ARCHITECTURE.md) for the system boundary and current i
 - [ ] Add a reproducible build that combines the verified device kernel with the native Linux root filesystem
 - [ ] Establish a recovery and rollback design before writing device partitions
 
-## Milestone 2 — MHF package pipeline and native applications
+## Milestone 2 — MHF packages, runtimes, and app isolation
 
-- [ ] Define a versioned MHF container format, including canonical manifest encoding and payload layout
+- [ ] Define a versioned MHF container format, canonical manifest encoding, payload layout, and permission schema
 - [ ] Implement a streaming package reader with strict size limits and archive path traversal protection
 - [ ] Add safe staging, fsync, atomic commit/rollback, and TOCTOU protection
 - [ ] Add malformed-container fuzz tests and property tests
 - [ ] Define release signing, key rotation, revocation, and recovery procedures
-- [ ] Implement an approved native Linux application runtime with strict sandboxing
+- [ ] Implement an approved native Linux application runtime with strict per-app sandboxing
+- [ ] Run .sh files only through a restricted Linux environment with explicit permissions
 - [ ] Keep Android APK compatibility as a separate optional runtime; it is not part of the Linux boot or base userland
-- [ ] Keep EXE and APP recognition separate from translation or execution support
-- [ ] Integrate per-UID isolation, Linux security policy, storage/network policies, and runtime resource limits
+- [ ] Define and implement EXE compatibility separately; recognizing .exe must never imply execution support
+- [ ] Resolve whether .app means an Apple application bundle or a Nila package before selecting its runtime
+- [ ] Enforce separate app identities, capability grants, storage/network policies, and resource limits before enabling app execution
+- [ ] Provide non-root sandbox profiles for banking, RailOne, and similar apps; test each app's compatibility and provider integrity checks
 
 ## Milestone 3 — vivo 1906 Linux bring-up
 
@@ -49,13 +52,43 @@ See [Target Architecture](ARCHITECTURE.md) for the system boundary and current i
 
 An Android framework or AOSP product tree is not a prerequisite for the Nila Linux base. Stock firmware, Android-derived firmware, or vendor components may be examined as hardware references or used as separately validated components when licensing and compatibility allow.
 
-## Milestone 4 — Linux mobile UI and installation
+## Milestone 4 — Nila Skin, system UI, browser, and installation
 
 - [ ] Implement Nila Skin as the shell and system UI for Nila's Linux graphical session
-- [ ] Connect UI actions to permission-checked native Nila services
-- [ ] Implement the installer, compatibility gate, backup, verification, migration, and rollback
-- [ ] Integrate Nila Security Center, Vault, and External Memory with native services
+- [ ] Build the launcher, quick settings, notifications, dialogs, widgets, and gesture framework
+- [ ] Integrate Easy Touch as user-toggleable, movable, and customizable shortcuts; keep preview state distinct from system actions
+- [ ] Implement theme packs with accurate attribution and accessible low-memory settings
+- [ ] Implement Nila Browser as a native app; evaluate the Chromium engine, extension compatibility, privacy controls, and optional VPN/Tor integration
+- [ ] Connect UI and browser actions to permission-checked native Nila services
+- [ ] Implement a graphical and PC/USB-assisted installer with compatibility checks, backup, verification, migration, and rollback
 - [ ] Package a device-specific Linux boot and root filesystem image only after kernel, recovery, partition, and integrity checks are verified
+
+## Milestone 5 — Security, owner profile, and systemless administration
+
+- [ ] Define one interactive owner profile while retaining separate service and per-app identities
+- [ ] Implement the selected enforcing Linux security policy, permission broker, app capability grants, and audit service
+- [ ] Design optional user-controlled systemless administrator access; keep root unavailable to apps and Assistant processes
+- [ ] Add per-app consent controls that users can review and revoke
+- [ ] Verify isolation between Assistant, browser, native apps, and financial-app sandboxes
+- [ ] Test locked/unlocked boot states and document which security guarantees the device can actually provide
+
+## Milestone 6 — Nila Assistant
+
+- [ ] Implement an internet-connected, voice-first AI service as an unprivileged process
+- [ ] Add user-controlled permissions per app, account, and capability, including clear disable/revoke controls
+- [ ] Implement a credential/session broker so account secrets are not exposed to the model or general logs
+- [ ] Add permission-checked web/app operation and local tools
+- [ ] Integrate call handling and approved voice/audio controls through native telephony APIs
+- [ ] Require explicit confirmation for financial, security-sensitive, and other consequential actions
+- [ ] Test that Assistant actions cannot escape app sandboxes or obtain root
+
+## Milestone 7 — Storage, memory, updates, and recovery
+
+- [ ] Implement Nila Storage and External Memory services with off/phone/SD/automatic/custom selection
+- [ ] Add encryption, integrity, safe removal, access control, and flash-wear safeguards
+- [ ] Evaluate zRAM and optional storage-backed swap on the actual device before enabling either by default
+- [ ] Implement signed update delivery, compatibility gates, atomic installation, recovery, and rollback
+- [ ] Test power-loss recovery and verify updates on a recoverable test device before release
 
 ## Release gates
 
