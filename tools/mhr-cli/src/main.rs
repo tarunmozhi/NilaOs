@@ -33,10 +33,6 @@ fn main() -> Result<()> {
 
             let analysis = analyze(&file)?;
 
-            if !analysis.supported {
-                bail!("input format is recognized but unsupported by this build");
-            }
-
             println!(
                 "{}",
                 serde_json::to_string_pretty(&create_manifest(&analysis, &name, &version))?
