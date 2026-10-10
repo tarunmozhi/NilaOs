@@ -11,6 +11,19 @@ permissions:
   contents: read
 
 jobs:
+  windows-runner-syntax:
+    name: Validate Windows PowerShell runner syntax
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Parse local runner without executing it
+        shell: pwsh
+        run: |
+          $scriptText = Get-Content -Raw "scripts/run-nila-checks.ps1"
+          [void][scriptblock]::Create($scriptText)
+          Write-Host "PowerShell syntax is valid."
+
   rust-checks:
     name: Rust workspace checks
     runs-on: ubuntu-latest
