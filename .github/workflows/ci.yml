@@ -35,3 +35,14 @@ jobs:
 
       - name: Run Clippy
         run: cargo clippy --workspace -- -D warnings
+
+      - name: Package source snapshot
+        run: zip -r NilaOS-source.zip . -x './.git/*' './target/*' './NilaOS-source.zip'
+
+      - name: Upload source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: nila-os-source-snapshot
+          path: NilaOS-source.zip
+          if-no-files-found: error
+          retention-days: 30
