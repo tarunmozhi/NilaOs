@@ -168,17 +168,26 @@ mod tests {
 
     #[test]
     fn detects_apk_case_insensitively() {
-        assert_eq!(detect_format(Path::new("application.APK")), InputFormat::Apk);
+        assert_eq!(
+            detect_format(Path::new("application.APK")),
+            InputFormat::Apk
+        );
     }
 
     #[test]
     fn detects_exe() {
-        assert_eq!(detect_format(Path::new("application.exe")), InputFormat::Exe);
+        assert_eq!(
+            detect_format(Path::new("application.exe")),
+            InputFormat::Exe
+        );
     }
 
     #[test]
     fn detects_shell() {
-        assert_eq!(detect_format(Path::new("application.sh")), InputFormat::Shell);
+        assert_eq!(
+            detect_format(Path::new("application.sh")),
+            InputFormat::Shell
+        );
     }
 
     #[test]
