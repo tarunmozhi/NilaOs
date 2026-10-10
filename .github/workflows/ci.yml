@@ -2,7 +2,7 @@ name: Nila OS CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, "feature/**"]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -23,6 +23,12 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+
+      - name: Validate vivo 1906 device profile
+        run: python3 scripts/validate-device-profile.py
+
+      - name: Check kernel build helper syntax
+        run: bash -n scripts/build-kernel.sh
 
       - name: Check formatting
         run: cargo fmt --all -- --check
