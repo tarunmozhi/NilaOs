@@ -14,8 +14,12 @@ REQUIRED_VALUES = {
     ("device", "model"): "PD1930F",
     ("hardware", "abi"): "arm64",
     ("compatibility", "deployment"): "mobile-only",
+    ("software", "android_reference"): "Android 11 / Funtouch OS 10.5",
+    ("software", "security_patch"): "2022-03-01",
+    ("software", "kernel"): "Linux 4.9.227-perf+",
+    ("software", "build"): "PD1930CF_EX_A_6.71.15",
 }
-REQUIRED_TABLES = ("device", "hardware", "compatibility", "features")
+REQUIRED_TABLES = ("device", "hardware", "compatibility", "software", "features")
 
 
 def validate_profile(data: Any) -> list[str]:
@@ -55,8 +59,6 @@ def validate_profile(data: Any) -> list[str]:
 
     compatibility = data.get("compatibility")
     if isinstance(compatibility, dict):
-        if not isinstance(compatibility.get("android_reference"), str):
-            errors.append("compatibility.android_reference must be a string")
         if compatibility.get("development_host") != "PC/Linux/VM":
             errors.append(
                 "compatibility.development_host must be 'PC/Linux/VM' "

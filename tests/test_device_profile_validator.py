@@ -65,6 +65,21 @@ class DeviceProfileValidatorTests(unittest.TestCase):
             any("compatibility.deployment" in error for error in validator.validate_profile(data))
         )
 
+    def test_requires_confirmed_android_reference(self):
+        data = deepcopy(self.profile)
+        data["software"]["android_reference"] = "Android 9 / Funtouch OS 9.1"
+        self.assertTrue(
+            any("software.android_reference" in error for error in validator.validate_profile(data))
+        )
+
+    def test_requires_confirmed_build_and_kernel(self):
+        data = deepcopy(self.profile)
+        data["software"]["build"] = "unknown"
+        data["software"]["kernel"] = ""
+        errors = validator.validate_profile(data)
+        self.assertTrue(any("software.build" in error for error in errors))
+        self.assertTrue(any("software.kernel" in error for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()

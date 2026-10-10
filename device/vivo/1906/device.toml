@@ -2,18 +2,26 @@
 name = "vivo Y11 / vivo 1906"
 codename = "vivo1906"
 model = "PD1930F"
+
 [hardware]
 soc = "Qualcomm Snapdragon 439 / SDM439"
-cpu = "8x ARM Cortex-A53"
+cpu = "8x ARM Cortex-A53 @ 1.95 GHz"
 abi = "arm64"
 ram_mb = 3072
 storage_gb = 32
 display = "720x1544@60"
 storage_type = "eMMC 5.1"
+
 [compatibility]
-android_reference = "Android 9 / Funtouch OS 9.1"
 deployment = "mobile-only"
 development_host = "PC/Linux/VM"
+
+[software]
+android_reference = "Android 11 / Funtouch OS 10.5"
+security_patch = "2022-03-01"
+kernel = "Linux 4.9.227-perf+"
+build = "PD1930CF_EX_A_6.71.15"
+
 [features]
 dual_sim = true
 fingerprint = true
