@@ -178,7 +178,10 @@ mod tests {
     fn test_key() -> (SigningKey, BTreeMap<String, String>) {
         let signing_key = SigningKey::from_bytes(&[7_u8; 32]);
         let mut trusted = BTreeMap::new();
-        trusted.insert("test-key-1".into(), hex(&signing_key.verifying_key().to_bytes()));
+        trusted.insert(
+            "test-key-1".into(),
+            hex(&signing_key.verifying_key().to_bytes()),
+        );
         (signing_key, trusted)
     }
 
