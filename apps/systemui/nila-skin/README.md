@@ -1,6 +1,8 @@
-# Nila Skin — Full UI prototype
+# Nila Skin — Linux UI prototype
 
-This folder contains a self-contained, interactive browser prototype for the Nila Skin visual direction. It follows the shared **Nila OS Dark 1** reference: deep navy surfaces, electric-blue controls, cyan focus accents, rounded cards, compact icon grids, and reduced-effects options suitable for a low-memory mobile target.
+This folder contains a self-contained interactive browser prototype for the planned Nila Skin mobile shell. Nila OS targets a Linux kernel and native Linux userspace; this preview is a design prototype, not an Android SystemUI or a native Linux application.
+
+It follows the shared **Nila OS Dark 1** reference: deep navy surfaces, electric-blue controls, cyan focus accents, rounded cards, compact icon grids, and reduced-effects options for a low-memory mobile target.
 
 ## Preview
 
@@ -13,17 +15,17 @@ Open `index.html` directly in a desktop or mobile browser. No build tools, netwo
 - Control Center with interactive quick-setting tiles and brightness slider
 - Notifications with All / Unread / Silent filters and clear action
 - Settings navigation and filtering
-- Edge-peeking Easy Touch floating widget, enabled by default, with a user toggle and customizable app and settings shortcuts; users can drag it anywhere on screen, with keyboard arrow movement supported
+- Edge-peeking Easy Touch button, enabled by default in the preview but user-toggleable; users can customize app and settings shortcuts and drag it anywhere on screen, with keyboard arrow movement supported
 - Performance metrics and power-mode selector (sample values only)
 - External Memory choices: Off, Phone Storage, SD Card, Automatic, Custom
 - Security & Privacy, Nila Vault, and guarded recovery / power menus
 - Recents, global search, first-run setup, and Nila Skin customization
 
-## Important implementation boundary
+## Implementation boundary
 
-This is a **UI prototype**, not a bootable SystemUI or a native Android application. Interactive controls change preview state only. Easy Touch is enabled by default in the preview. Its Settings page lets users choose which app and settings shortcuts appear; selections only change preview state and do not connect to a native Android accessibility or SystemUI service. Memory choices do not configure zRAM or storage; security and Vault controls are not connected to privileged services; power and recovery actions are deliberately non-destructive. Metrics and notifications are sample data.
+All controls change preview state only. Easy Touch's Settings toggle and shortcut selections are not connected to native services. Memory choices do not configure zRAM or storage; security and Vault controls are not connected to privileged services; power and recovery actions are deliberately non-destructive. Metrics and notifications are sample data.
 
-The next native integration step is to port the screen structure and design tokens into the chosen Android/AOSP SystemUI implementation, then connect actions through permission-checked Nila services. Do not expose privileged system operations directly to UI event handlers. Validate on an emulator first, then on the supported vivo 1906 device only after a compatible boot chain and kernel are available.
+The native implementation belongs in Nila's Linux user session and must use the Linux display, input, audio, and service stack selected for the device. It must not depend on Android SystemUI or AOSP. Android application compatibility, if added later, is a separate optional runtime and does not define the Nila OS base. Route privileged operations through permission-checked Nila services.
 
 ## Local checks
 
