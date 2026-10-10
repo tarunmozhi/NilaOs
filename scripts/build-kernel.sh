@@ -5,6 +5,7 @@ set -Eeuo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 KERNEL_SRC="${KERNEL_SRC:-}"
 KERNEL_DEFCONFIG="${KERNEL_DEFCONFIG:-}"
+CROSS_COMPILE="${CROSS_COMPILE:-aarch64-linux-gnu-}"
 OUT_DIR="${OUT_DIR:-$ROOT/out/kernel}"
 JOBS="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || printf '2')}"
 
@@ -18,12 +19,13 @@ Required:
   KERNEL_DEFCONFIG    Exact defconfig supplied by that kernel/device tree
 
 Optional:
+  CROSS_COMPILE       Compiler prefix ending in '-' (default: aarch64-linux-gnu-)
   OUT_DIR             Output directory (default: out/kernel)
   JOBS                Positive integer build parallelism (default: available CPU count)
 
-A successful compile does not establish bootability: vendor modules, firmware,
-device tree selection, boot image packaging, AVB and partition compatibility
-must be handled and tested separately.
+Builds Image.gz-dtb as a kernel candidate. A successful compile does not establish
+bootability: the exact device tree/overlay, modules, firmware, boot image packaging,
+AVB and partition compatibility must be handled and tested separately.
 EOF
 }
 
@@ -35,6 +37,10 @@ if [[ -z "$KERNEL_SRC" || -z "$KERNEL_DEFCONFIG" ]]; then
 fi
 if [[ ! "$KERNEL_DEFCONFIG" =~ ^[A-Za-z0-9._-]+$ ]]; then
   echo "ERROR: KERNEL_DEFCONFIG must be a plain defconfig filename, not a path." >&2
+  exit 2
+fi
+if [[ ! "$CROSS_COMPILE" =~ ^[A-Za-z0-9_./+-]+-$ ]]; then
+  echo "ERROR: CROSS_COMPILE must be a compiler prefix ending in '-' with no shell metacharacters." >&2
   exit 2
 fi
 if [[ ! "$JOBS" =~ ^[1-9][0-9]*$ ]]; then
@@ -54,8 +60,8 @@ if ! command -v make >/dev/null 2>&1; then
   echo "ERROR: make is required." >&2
   exit 2
 fi
-if ! command -v aarch64-linux-gnu-gcc >/dev/null 2>&1; then
-  echo "ERROR: install an AArch64 GNU cross compiler (aarch64-linux-gnu-gcc)." >&2
+if ! command -v "${CROSS_COMPILE}gcc" >/dev/null 2>&1; then
+  echo "ERROR: compiler not found: ${CROSS_COMPILE}gcc (set CROSS_COMPILE to the installed toolchain prefix)." >&2
   exit 2
 fi
 
@@ -68,13 +74,13 @@ case "$OUT_DIR/" in
     ;;
 esac
 
-make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- "$KERNEL_DEFCONFIG"
-make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j"$JOBS" Image.gz dtbs
+make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE="$CROSS_COMPILE" "$KERNEL_DEFCONFIG"
+make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE="$CROSS_COMPILE" -j"$JOBS" Image.gz-dtb
 
-if [[ ! -s "$OUT_DIR/arch/arm64/boot/Image.gz" ]]; then
-  echo "ERROR: kernel build completed without Image.gz output." >&2
+if [[ ! -s "$OUT_DIR/arch/arm64/boot/Image.gz-dtb" ]]; then
+  echo "ERROR: kernel build completed without Image.gz-dtb output." >&2
   exit 1
 fi
-printf 'Kernel build output: %s\n' "$OUT_DIR/arch/arm64/boot/Image.gz"
-printf 'DTB output directory: %s\n' "$OUT_DIR/arch/arm64/boot/dts"
+printf 'Kernel build output: %s\n' "$OUT_DIR/arch/arm64/boot/Image.gz-dtb"
+printf 'DTB/DTBO output directory: %s\n' "$OUT_DIR/arch/arm64/boot/dts"
 printf '%s\n' "Build completed. Device bootability is NOT verified."
