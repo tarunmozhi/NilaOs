@@ -32,10 +32,8 @@ fn main() -> Result<()> {
                 .ok_or_else(|| anyhow::anyhow!("missing version"))?;
             let analysis = analyze(&file)?;
 
-            if !analysis.supported {
-                bail!("input format is recognized but unsupported by this build");
-            }
-
+            // Metadata generation is allowed for unsupported inputs, but the
+            // resulting manifest remains unsupported and cannot be authorized.
             println!(
                 "{}",
                 serde_json::to_string_pretty(&create_manifest(&analysis, &name, &version))?
