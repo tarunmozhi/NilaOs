@@ -3,8 +3,7 @@ use mhr_core::{sha256_file, MhfManifest};
 use std::path::Path;
 
 pub fn verify_payload(path: &Path, expected_sha256: &str) -> Result<()> {
-    if expected_sha256.len() != 64
-        || !expected_sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
+    if expected_sha256.len() != 64 || !expected_sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
     {
         bail!("MFR integrity metadata must be a 64-character SHA-256 hex digest");
     }
@@ -42,7 +41,10 @@ pub fn authorize(m: &MhfManifest) -> Result<()> {
 
     match m.runtime.as_str() {
         "mar" | "linux" | "native" => {
-            bail!("Runtime '{}' is not implemented; refusing execution", m.runtime)
+            bail!(
+                "Runtime '{}' is not implemented; refusing execution",
+                m.runtime
+            )
         }
         _ => bail!("Unsupported runtime '{}'; refusing execution", m.runtime),
     }
@@ -57,8 +59,7 @@ mod tests {
         time::{SystemTime, UNIX_EPOCH},
     };
 
-    const VALID_SHA256: &str =
-        "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad";
+    const VALID_SHA256: &str = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad";
 
     fn manifest(sha256: &str, supported: bool) -> MhfManifest {
         MhfManifest {
