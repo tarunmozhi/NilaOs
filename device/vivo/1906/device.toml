@@ -5,7 +5,7 @@ model = "PD1930F"
 
 [hardware]
 soc = "Qualcomm Snapdragon 439 / SDM439"
-cpu = "8x ARM Cortex-A53"
+cpu = "8x ARM Cortex-A53 @ 1.95 GHz"
 abi = "arm64"
 ram_mb = 3072
 storage_gb = 32
