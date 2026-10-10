@@ -57,8 +57,15 @@ fn main() -> Result<()> {
             verify_manifest_signature(&manifest, &trusted_keys.keys)?;
 
             println!("MHF manifest signature: VALID");
-            println!("Signer key ID: {}", manifest.signature.as_ref().unwrap().key_id);
-            println!("Important: this validates signed metadata only; it does not verify a payload, install an app, or prove that its runtime is implemented.");
+            let key_id = manifest
+                .signature
+                .as_ref()
+                .map(|signature| signature.key_id.as_str())
+                .context("verified manifest unexpectedly lacks signature metadata")?;
+            println!("Signer key ID: {key_id}");
+            println!(
+                "Important: this validates signed metadata only; it does not verify a payload, install an app, or prove that its runtime is implemented."
+            );
         }
         "check-policy" => {
             let path = args
