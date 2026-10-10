@@ -28,6 +28,16 @@ pub struct Analysis {
     pub notes: Vec<String>,
 }
 
+/// Detached Ed25519 signature metadata. The private signing key must never be
+/// stored in the repository or on a production device.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct PackageSignature {
+    pub key_id: String,
+    /// Hex encoding of a 64-byte Ed25519 signature.
+    pub signature_hex: String,
+}
+
 pub fn detect_format(path: &Path) -> InputFormat {
     match path
         .extension()
@@ -129,6 +139,8 @@ pub struct MhfManifest {
     pub sha256: String,
     pub supported: bool,
     pub notes: Vec<String>,
+    #[serde(default)]
+    pub signature: Option<PackageSignature>,
 }
 
 pub fn create_manifest(a: &Analysis, name: &str, version: &str) -> MhfManifest {
@@ -142,6 +154,7 @@ pub fn create_manifest(a: &Analysis, name: &str, version: &str) -> MhfManifest {
         sha256: a.sha256.clone(),
         supported: a.supported,
         notes: a.notes.clone(),
+        signature: None,
     }
 }
 
@@ -224,5 +237,14 @@ mod tests {
         let analysis = result.expect("analysis should recognize the extension");
         assert_eq!(analysis.format, InputFormat::Apk);
         assert!(!analysis.supported);
+    }
+
+    #[test]
+    fn new_manifests_are_unsigned_until_explicitly_signed() {
+        let path = temp_file(b"placeholder", "apk");
+        let analysis = analyze(&path).unwrap();
+        let manifest = create_manifest(&analysis, "Example", "0.1");
+        let _ = fs::remove_file(&path);
+        assert!(manifest.signature.is_none());
     }
 }
