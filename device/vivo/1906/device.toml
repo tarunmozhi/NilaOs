@@ -16,6 +16,7 @@ storage_type = "eMMC 5.1"
 deployment = "mobile-only"
 development_host = "PC/Linux/VM"
 
+# Stock firmware on the reference phone; Nila OS itself targets Linux, not Android.
 [software]
 android_reference = "Android 11 / Funtouch OS 10.5"
 security_patch = "2022-03-01"
