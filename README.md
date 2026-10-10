@@ -25,13 +25,13 @@ This repository is an engineering baseline. It is **not yet a bootable phone ima
 
 ## Run checks on a Windows PC
 
-A guarded PowerShell runner is available at `scripts/run-nila-checks.ps1`. It clones or safely fast-forwards this repository into `E:\\Arunmozhi\\Nila`, validates the device profile, runs Python/Rust checks, and checks the kernel helper's shell syntax. It refuses to overwrite a dirty checkout.
+A guarded PowerShell runner is available at `scripts/run-nila-checks.ps1`. It clones or safely fast-forwards this repository into `E:\Arunmozhi\Nila`, validates the device profile, runs Python/Rust checks, and checks the kernel helper's shell syntax. It refuses to overwrite a dirty checkout.
 
 Open PowerShell and run:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
-& "E:\\Arunmozhi\\Nila\\scripts\\run-nila-checks.ps1"
+& "E:\Arunmozhi\Nila\\scripts\\run-nila-checks.ps1"
 ```
 
 Requirements: Git, Python 3.11+, and the stable Rust toolchain. The script never flashes a phone. Kernel compilation is skipped unless you explicitly provide both a verified kernel source tree and its exact device defconfig; on Windows it uses WSL and the helper still requires the AArch64 cross-compiler.
