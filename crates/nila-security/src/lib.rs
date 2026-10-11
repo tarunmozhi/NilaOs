@@ -171,7 +171,10 @@ impl Capability {
     fn always_owner_only(self) -> bool {
         matches!(
             self,
-            Self::AccessSecrets | Self::ManagePackages | Self::InstallSystemUpdate | Self::EnterRecovery
+            Self::AccessSecrets
+                | Self::ManagePackages
+                | Self::InstallSystemUpdate
+                | Self::EnterRecovery
         )
     }
 
@@ -207,11 +210,17 @@ pub struct PolicyDecision {
 
 impl PolicyDecision {
     fn deny(reason: &'static str) -> Self {
-        Self { allowed: false, reason: reason.to_owned() }
+        Self {
+            allowed: false,
+            reason: reason.to_owned(),
+        }
     }
 
     fn allow(reason: &'static str) -> Self {
-        Self { allowed: true, reason: reason.to_owned() }
+        Self {
+            allowed: true,
+            reason: reason.to_owned(),
+        }
     }
 }
 
@@ -266,44 +275,89 @@ impl From<(ActionRequest, PolicyDecision)> for AuditEvent {
 mod permission_tests {
     use super::*;
 
-    fn request(actor: Actor, capability: Capability, grant_present: bool, confirmed: bool) -> ActionRequest {
-        ActionRequest { actor, capability, grant_present, confirmed }
+    fn request(
+        actor: Actor,
+        capability: Capability,
+        grant_present: bool,
+        confirmed: bool,
+    ) -> ActionRequest {
+        ActionRequest {
+            actor,
+            capability,
+            grant_present,
+            confirmed,
+        }
     }
 
     #[test]
     fn denies_assistant_access_to_secrets_even_with_grant() {
-        let decision = evaluate_action(request(Actor::Assistant, Capability::AccessSecrets, true, true));
+        let decision = evaluate_action(request(
+            Actor::Assistant,
+            Capability::AccessSecrets,
+            true,
+            true,
+        ));
         assert!(!decision.allowed);
     }
 
     #[test]
     fn denies_application_package_management() {
-        let decision = evaluate_action(request(Actor::Application, Capability::ManagePackages, true, true));
+        let decision = evaluate_action(request(
+            Actor::Application,
+            Capability::ManagePackages,
+            true,
+            true,
+        ));
         assert!(!decision.allowed);
     }
 
     #[test]
     fn denies_missing_grant() {
-        let decision = evaluate_action(request(Actor::Assistant, Capability::ReadDeviceInfo, false, false));
+        let decision = evaluate_action(request(
+            Actor::Assistant,
+            Capability::ReadDeviceInfo,
+            false,
+            false,
+        ));
         assert!(!decision.allowed);
     }
 
     #[test]
     fn requires_confirmation_for_calls() {
-        let decision = evaluate_action(request(Actor::Assistant, Capability::HandleCalls, true, false));
+        let decision = evaluate_action(request(
+            Actor::Assistant,
+            Capability::HandleCalls,
+            true,
+            false,
+        ));
         assert!(!decision.allowed);
     }
 
     #[test]
     fn allows_granted_and_confirmed_call_request() {
-        let decision = evaluate_action(request(Actor::Assistant, Capability::HandleCalls, true, true));
+        let decision = evaluate_action(request(
+            Actor::Assistant,
+            Capability::HandleCalls,
+            true,
+            true,
+        ));
         assert!(decision.allowed);
     }
 
     #[test]
     fn ordinary_read_only_app_capability_needs_grant_but_not_confirmation() {
-        let denied = evaluate_action(request(Actor::Application, Capability::ReadDeviceInfo, false, false));
-        let allowed = evaluate_action(request(Actor::Application, Capability::ReadDeviceInfo, true, false));
+        let denied = evaluate_action(request(
+            Actor::Application,
+            Capability::ReadDeviceInfo,
+            false,
+            false,
+        ));
+        let allowed = evaluate_action(request(
+            Actor::Application,
+            Capability::ReadDeviceInfo,
+            true,
+            false,
+        ));
         assert!(!denied.allowed);
         assert!(allowed.allowed);
     }
