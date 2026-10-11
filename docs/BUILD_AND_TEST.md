@@ -73,7 +73,7 @@ These commands validate configuration and service entries. They do not enable Li
 
 ## 7. Linux kernel build helper
 
-The helper requires a compatible Linux kernel tree and the exact verified defconfig for the target device. It intentionally does not download a kernel or guess a defconfig:
+The helper requires GNU `realpath` (from coreutils), `make`, the compiler named by `CROSS_COMPILE`, a compatible Linux kernel tree, and the exact verified defconfig for the target device. It validates that the output path is outside the kernel source tree before creating it. It intentionally does not download a kernel or guess a defconfig:
 
 ```bash
 KERNEL_SRC=/absolute/path/to/verified/kernel \
