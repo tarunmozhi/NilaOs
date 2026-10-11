@@ -8,7 +8,7 @@ bash scripts/inspect-kernel-source.sh /absolute/path/to/linux-source
 
 It checks that the directory resembles a Linux ARM64 source tree, reports its
 version and available ARM64 defconfigs, and searches a bounded set of source
-directories for references to SDM439, PD1930F, vivo 1906, or 1906. The search is
+directories for references to SDM439, PD1930CF, PD1930BF, PD1930F, vivo 1906, or 1906. The search is
 only a discovery aid: vendor trees can use different names, and a text match
 does not establish that the tree supports this exact phone.
 
