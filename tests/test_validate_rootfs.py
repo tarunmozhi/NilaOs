@@ -1,10 +1,20 @@
+import importlib.util
 import json
 import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-from scripts_validate_rootfs_import import ValidationError, validate_rootfs
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "validate-rootfs.py"
+SPEC = importlib.util.spec_from_file_location("nila_rootfs_validator", SCRIPT)
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError("could not load rootfs validator")
+MODULE = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = MODULE
+SPEC.loader.exec_module(MODULE)
+ValidationError = MODULE.ValidationError
+validate_rootfs = MODULE.validate_rootfs
 
 
 class RootfsValidatorTests(unittest.TestCase):
