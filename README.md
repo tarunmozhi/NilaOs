@@ -1,6 +1,6 @@
 # Nila OS
 
-Nila OS is a mobile-first **Linux-based operating system project** targeting the vivo Y11 / vivo 1906 (PD1930F), Qualcomm Snapdragon 439 / SDM439, ARM64.
+Nila OS is a mobile-first **Linux-based operating system project** targeting the vivo Y11 / vivo 1906, Qualcomm Snapdragon 439 / SDM439, ARM64. The reported stock build is `PD1930CF_EX_A_6.71.15`; its hardware board ID and DT/DTBO overlay mapping remain unverified.
 
 Nila's intended base is the Linux kernel and a native Linux userspace. Nila OS is not Android or an AOSP distribution. Android/Funtouch details in the device profile describe the phone's stock firmware and hardware reference only. Android app compatibility is a possible optional runtime; it does not define or provide the Nila OS base.
 

@@ -11,7 +11,9 @@ PROFILE = ROOT / "device/vivo/1906/device.toml"
 REQUIRED_VALUES = {
     ("device", "name"): "vivo Y11 / vivo 1906",
     ("device", "codename"): "vivo1906",
-    ("device", "model"): "PD1930F",
+    ("device", "model"): "vivo 1906",
+    ("device", "reported_firmware_variant"): "PD1930CF_EX",
+    ("device", "board_variant"): "unverified",
     ("hardware", "abi"): "arm64",
     ("compatibility", "deployment"): "mobile-only",
     ("software", "android_reference"): "Android 11 / Funtouch OS 10.5",
@@ -82,7 +84,7 @@ def main() -> int:
             print(f" - {error}", file=sys.stderr)
         return 1
 
-    print("Device profile OK: vivo Y11 / PD1930F (ARM64, mobile-only)")
+    print("Device profile OK: vivo Y11 / 1906; reported PD1930CF_EX firmware, board mapping unresolved (ARM64, mobile-only)")
     print("Note: profile validation does not verify hardware support or bootability.")
     return 0
 

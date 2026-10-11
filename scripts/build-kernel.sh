@@ -65,11 +65,25 @@ if ! command -v "${CROSS_COMPILE}gcc" >/dev/null 2>&1; then
   exit 2
 fi
 
+if ! command -v realpath >/dev/null 2>&1; then
+  echo "ERROR: realpath is required to validate OUT_DIR safely." >&2
+  exit 2
+fi
+if ! OUT_DIR="$(realpath -m -- "$OUT_DIR")"; then
+  echo "ERROR: could not resolve OUT_DIR safely." >&2
+  exit 2
+fi
+case "$OUT_DIR/" in
+  "$KERNEL_SRC/"*)
+    echo "ERROR: OUT_DIR must be outside the kernel source tree." >&2
+    exit 2
+    ;;
+esac
 mkdir -p "$OUT_DIR"
 OUT_DIR="$(cd -- "$OUT_DIR" && pwd -P)"
 case "$OUT_DIR/" in
   "$KERNEL_SRC/"*)
-    echo "ERROR: OUT_DIR must be outside the kernel source tree." >&2
+    echo "ERROR: OUT_DIR resolves inside the kernel source tree." >&2
     exit 2
     ;;
 esac

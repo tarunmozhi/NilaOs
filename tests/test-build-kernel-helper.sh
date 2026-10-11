@@ -56,6 +56,37 @@ bash "$ROOT/scripts/build-kernel.sh"
 grep -F "CROSS_COMPILE=$CROSS_COMPILE" "$MAKE_LOG" >/dev/null
 grep -F "Image.gz-dtb" "$MAKE_LOG" >/dev/null
 
+IN_TREE_OUT="$KERNEL_SRC/nila-in-tree-output"
+if PATH="$TOOL_BIN:$PATH" \
+   KERNEL_SRC="$KERNEL_SRC" \
+   KERNEL_DEFCONFIG="test_defconfig" \
+   CROSS_COMPILE="$CROSS_COMPILE" \
+   OUT_DIR="$IN_TREE_OUT" \
+   bash "$ROOT/scripts/build-kernel.sh" >/dev/null 2>&1; then
+  echo "ERROR: in-tree OUT_DIR was accepted" >&2
+  exit 1
+fi
+if [[ -e "$IN_TREE_OUT" ]]; then
+  echo "ERROR: rejected in-tree OUT_DIR was created before validation" >&2
+  exit 1
+fi
+
+ln -s "$KERNEL_SRC" "$TEMP_ROOT/kernel-alias"
+ALIASED_OUT="$TEMP_ROOT/kernel-alias/nila-output"
+if PATH="$TOOL_BIN:$PATH" \
+   KERNEL_SRC="$KERNEL_SRC" \
+   KERNEL_DEFCONFIG="test_defconfig" \
+   CROSS_COMPILE="$CROSS_COMPILE" \
+   OUT_DIR="$ALIASED_OUT" \
+   bash "$ROOT/scripts/build-kernel.sh" >/dev/null 2>&1; then
+  echo "ERROR: symlinked in-tree OUT_DIR was accepted" >&2
+  exit 1
+fi
+if [[ -e "$KERNEL_SRC/nila-output" ]]; then
+  echo "ERROR: rejected symlinked OUT_DIR created a directory in kernel source" >&2
+  exit 1
+fi
+
 if PATH="$TOOL_BIN:$PATH" \
    KERNEL_SRC="$KERNEL_SRC" \
    KERNEL_DEFCONFIG="test_defconfig" \

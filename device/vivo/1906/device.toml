@@ -1,7 +1,9 @@
 [device]
 name = "vivo Y11 / vivo 1906"
 codename = "vivo1906"
-model = "PD1930F"
+model = "vivo 1906"
+reported_firmware_variant = "PD1930CF_EX"
+board_variant = "unverified"
 
 [hardware]
 soc = "Qualcomm Snapdragon 439 / SDM439"

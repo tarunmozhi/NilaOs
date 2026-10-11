@@ -38,6 +38,15 @@ class DeviceProfileValidatorTests(unittest.TestCase):
             any("device.model" in error for error in validator.validate_profile(data))
         )
 
+    def test_reported_cf_firmware_does_not_claim_board_mapping(self):
+        self.assertEqual(self.profile["device"]["reported_firmware_variant"], "PD1930CF_EX")
+        self.assertEqual(self.profile["device"]["board_variant"], "unverified")
+        data = deepcopy(self.profile)
+        data["device"]["board_variant"] = "PD1930F_EX"
+        self.assertTrue(
+            any("device.board_variant" in error for error in validator.validate_profile(data))
+        )
+
     def test_rejects_boolean_ram_value(self):
         data = deepcopy(self.profile)
         data["hardware"]["ram_mb"] = True

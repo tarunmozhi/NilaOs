@@ -19,6 +19,7 @@ The base system milestone below remains the foundation. After it, the project ta
 
 ## Milestone 1 — Linux system foundation
 
+- [x] Add structural validation for the generic ARM64 development rootfs and require an explicit non-device-ready manifest
 - [ ] Select and document the Linux userspace, init/service manager, and base system composition
 - [ ] Define the native root filesystem layout, boot-time service startup, logs, storage, and update model
 - [ ] Add a reproducible build that combines the verified device kernel with the native Linux root filesystem
