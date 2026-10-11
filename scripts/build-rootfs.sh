@@ -6,24 +6,25 @@ set -Eeuo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SUITE="${SUITE:-bookworm}"
 MIRROR="${MIRROR:-https://deb.debian.org/debian}"
-ROOTFS_DIR="${ROOTFS_DIR:-${HOME:-/tmp}/nila-rootfs-arm64}"
+ROOTFS_DIR="${ROOTFS_DIR:-/tmp/nila-rootfs-arm64}"
 ARCH=arm64
 
 usage() {
   cat <<'EOF'
 Usage:
-  sudo env ROOTFS_DIR=/absolute/output/path bash scripts/build-rootfs.sh
+  sudo env ROOTFS_DIR=/tmp/nila-rootfs-arm64 bash scripts/build-rootfs.sh
 
 Optional environment:
   SUITE       Debian suite (default: bookworm)
   MIRROR      Debian mirror (default: https://deb.debian.org/debian)
-  ROOTFS_DIR  New output directory (default: <repo>/out/rootfs-arm64)
+  ROOTFS_DIR  New directory directly under /tmp (default: /tmp/nila-rootfs-arm64)
 
 Requirements:
-  debootstrap, qemu-aarch64-static, chroot, and root privileges.
+  debootstrap, qemu-aarch64-static, chroot, realpath, and root privileges.
 
 Safety:
   - refuses to overwrite an existing output directory
+  - accepts only a new direct child of /tmp as ROOTFS_DIR
   - writes only to ROOTFS_DIR
   - does not mount partitions, modify bootloader state, or flash a device
   - produces a generic ARM64 development userspace, NOT a device-ready rootfs
@@ -52,13 +53,21 @@ if [[ "$ROOTFS_DIR" != /* ]]; then
   echo "ERROR: ROOTFS_DIR must be an absolute path." >&2
   exit 2
 fi
-case "$ROOTFS_DIR" in
-  /|/bin|/boot|/dev|/etc|/home|/lib|/lib64|/proc|/root|/run|/sbin|/sys|/tmp|/usr|/var|"$ROOT"|"$ROOT/"*)
-    echo "ERROR: refusing unsafe ROOTFS_DIR: $ROOTFS_DIR" >&2
-    exit 2
-    ;;
-esac
-if [[ -e "$ROOTFS_DIR" ]]; then
+if ! command -v realpath >/dev/null 2>&1; then
+  echo "ERROR: realpath is required to validate ROOTFS_DIR safely." >&2
+  exit 2
+fi
+if ! ROOTFS_PARENT="$(realpath -e -- "$(dirname -- "$ROOTFS_DIR")" 2>/dev/null)"; then
+  echo "ERROR: ROOTFS_DIR parent must already exist." >&2
+  exit 2
+fi
+ROOTFS_NAME="$(basename -- "$ROOTFS_DIR")"
+if [[ "$ROOTFS_PARENT" != "/tmp" || -z "$ROOTFS_NAME" || "$ROOTFS_NAME" == "." || "$ROOTFS_NAME" == ".." ]]; then
+  echo "ERROR: ROOTFS_DIR must be a direct child of /tmp." >&2
+  exit 2
+fi
+ROOTFS_DIR="$ROOTFS_PARENT/$ROOTFS_NAME"
+if [[ -e "$ROOTFS_DIR" || -L "$ROOTFS_DIR" ]]; then
   echo "ERROR: ROOTFS_DIR already exists; refusing to overwrite it: $ROOTFS_DIR" >&2
   exit 2
 fi
@@ -70,7 +79,7 @@ for tool in debootstrap chroot qemu-aarch64-static python3; do
   command -v "$tool" >/dev/null 2>&1 || { echo "ERROR: required tool not found: $tool" >&2; exit 2; }
 done
 
-mkdir -p "$(dirname -- "$ROOTFS_DIR")"
+mkdir -- "$ROOTFS_DIR"
 debootstrap --arch="$ARCH" --foreign --variant=minbase "$SUITE" "$ROOTFS_DIR" "$MIRROR"
 install -m 0755 "$(command -v qemu-aarch64-static)" "$ROOTFS_DIR/usr/bin/qemu-aarch64-static"
 chroot "$ROOTFS_DIR" /debootstrap/debootstrap --second-stage
