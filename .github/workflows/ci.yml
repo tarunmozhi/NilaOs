@@ -36,6 +36,9 @@ jobs:
       - name: Test rootfs helper safety guards
         run: bash tests/test-build-rootfs-helper.sh
 
+      - name: Check rootfs validator command
+        run: python3 scripts/validate-rootfs.py --help
+
       - name: Test kernel source inspector
         run: bash tests/test-inspect-kernel-source.sh
 
