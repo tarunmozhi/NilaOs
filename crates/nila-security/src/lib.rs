@@ -364,7 +364,12 @@ mod permission_tests {
 
     #[test]
     fn audit_event_contains_decision_without_secret_payload() {
-        let req = request(Actor::Assistant, Capability::AccessAccountSession, true, false);
+        let req = request(
+            Actor::Assistant,
+            Capability::AccessAccountSession,
+            true,
+            false,
+        );
         let decision = evaluate_action(req);
         let event = AuditEvent::from((req, decision));
         assert!(!event.allowed);
