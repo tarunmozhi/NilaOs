@@ -4,20 +4,20 @@ The repository now has an opt-in helper that can create a **generic Debian Bookw
 
 ## Run on Ubuntu/WSL
 
-Install the host tools first:
+Install the host tools first (including `coreutils` for `realpath`):
 
 ```bash
 sudo apt-get update
-sudo apt-get install debootstrap qemu-user-static
+sudo apt-get install debootstrap qemu-user-static coreutils
 ```
 
 Then from the repository root:
 
 ```bash
-sudo env ROOTFS_DIR="$PWD/out/rootfs-arm64" bash scripts/build-rootfs.sh
+sudo env ROOTFS_DIR=/tmp/nila-rootfs-arm64 bash scripts/build-rootfs.sh
 ```
 
-The script refuses to overwrite an existing destination and requires an HTTPS mirror. To check host prerequisites without building:
+The script accepts only a new direct child of `/tmp`, resolves and checks the destination parent, refuses existing files or symlinks, and requires an HTTPS mirror. To check host prerequisites without building:
 
 ```bash
 sudo bash scripts/build-rootfs.sh --check
