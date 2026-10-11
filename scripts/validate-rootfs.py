@@ -26,6 +26,24 @@ class ValidationError(Exception):
     """Raised when the staged rootfs fails a validation requirement."""
 
 
+def _resolve_required_path(root: Path, relative: str, kind: str) -> Path:
+    try:
+        resolved = (root / relative).resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        raise ValidationError(f"required {kind} is missing or invalid: /{relative}") from error
+
+    try:
+        resolved.relative_to(root)
+    except ValueError:
+        raise ValidationError(f"required {kind} escapes rootfs: /{relative}") from None
+
+    if kind == "directory" and not resolved.is_dir():
+        raise ValidationError(f"required directory is missing: /{relative}")
+    if kind == "file" and not resolved.is_file():
+        raise ValidationError(f"required file is missing: /{relative}")
+    return resolved
+
+
 def validate_rootfs(root: Path) -> list[str]:
     if root.is_symlink():
         raise ValidationError("rootfs path must not itself be a symbolic link")
@@ -33,21 +51,20 @@ def validate_rootfs(root: Path) -> list[str]:
         raise ValidationError(f"rootfs directory does not exist: {root}")
 
     root = root.resolve()
-    for relative in REQUIRED_DIRECTORIES:
-        item = root / relative
-        if not item.is_dir():
-            raise ValidationError(f"required directory is missing: /{relative}")
+    resolved_directories = {
+        relative: _resolve_required_path(root, relative, "directory")
+        for relative in REQUIRED_DIRECTORIES
+    }
+    resolved_files = {
+        relative: _resolve_required_path(root, relative, "file")
+        for relative in REQUIRED_FILES
+    }
 
-    for relative in REQUIRED_FILES:
-        item = root / relative
-        if not item.is_file():
-            raise ValidationError(f"required file is missing: /{relative}")
-
-    shell = root / "bin/sh"
+    shell = resolved_files["bin/sh"]
     if not (shell.stat().st_mode & 0o111):
         raise ValidationError("/bin/sh does not have an executable permission bit")
 
-    manifest_path = root / "etc/nila/rootfs-manifest.json"
+    manifest_path = resolved_files["etc/nila/rootfs-manifest.json"]
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
