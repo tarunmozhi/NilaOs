@@ -5,6 +5,7 @@ members = [
     "crates/mfr-nila",
     "crates/nila-security",
     "crates/nila-services",
+    "crates/nila-assistant",
     "tools/mhr-cli",
     "crates/nila-bootstrap",
 ]
