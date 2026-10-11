@@ -116,6 +116,18 @@ class QualcommDtInspectorTests(unittest.TestCase):
         with self.assertRaises(inspector.ImageError):
             inspector.parse_dt_table(bytes(table))
 
+        empty_table = bytearray(make_dt_table(fdt))
+        struct.pack_into(">I", empty_table, 16, 0)
+        with self.assertRaises(inspector.ImageError):
+            inspector.parse_dt_table(bytes(empty_table))
+
+    def test_rejects_non_ascii_property_names(self):
+        fdt = bytearray(make_fdt(self.properties))
+        strings_offset = struct.unpack_from(">I", fdt, 12)[0]
+        fdt[strings_offset] = 0xFF
+        with self.assertRaises(inspector.ImageError):
+            inspector.parse_fdt(bytes(fdt))
+
     def test_rejects_unknown_image_format(self):
         with self.assertRaises(inspector.ImageError):
             inspector.inspect_image(b"not a device tree")
