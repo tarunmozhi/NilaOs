@@ -39,7 +39,7 @@ else
 fi
 printf '\nDevice/SoC source references (bounded sample):\n'
 if command -v grep >/dev/null 2>&1; then
-  grep -RIlE 'sdm439|PD1930F|vivo.?1906|1906' \
+  grep -RIlE 'sdm439|PD1930CF|PD1930BF|PD1930F|vivo.?1906|1906' \
     "$src/arch/arm64/boot/dts" "$src/arch/arm64/configs" "$src/drivers" \
     2>/dev/null | head -n 30 || true
 fi
