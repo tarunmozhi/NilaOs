@@ -25,6 +25,7 @@ The current repository is an engineering baseline, not a Linux distribution or b
 - MHR command-line tool
 - vivo 1906 reference profile with schema validation and regression tests
 - Guarded ARM64 Linux kernel-build helper with configurable cross-compiler prefix and checked `Image.gz-dtb` output
+- Structural validator and explicit non-device-ready manifest for the experimental Debian Bookworm ARM64 development rootfs
 - Nila Skin browser preview with user-toggleable, draggable, customizable Easy Touch shortcuts
 
 These code checks, registries, and preview do not provide a running kernel, userspace, init system, service enforcement, or native phone UI.
