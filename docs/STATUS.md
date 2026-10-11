@@ -34,7 +34,7 @@ These code checks, registries, and preview do not provide a running kernel, user
 | Component | Current state |
 | --- | --- |
 | Nila UI framework and Nila Skin | Browser prototype only; no native Linux shell or system UI |
-| Easy Touch | Toggle, move, and shortcut customization work in the browser preview; native system actions are not connected |
+| Easy Touch | Browser preview is enabled by default and user-toggleable; shortcut choices and moved position persist in browser storage and restore after resize. Native system actions are not connected |
 | Nila Browser | Not implemented as an application; no selected or integrated web engine, extension service, privacy controller, VPN, or Tor integration |
 | Nila Assistant | Unprivileged service registry entry and documented requirements only; no AI runtime, internet access, account/session broker, call control, voice processing, or app permission UI |
 | MHF/MHR application support | Extension recognition, metadata, hashing, signature checks, and fail-closed authorization; no container installer or executable runtime |
