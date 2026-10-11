@@ -22,6 +22,10 @@ See [Target Architecture](docs/ARCHITECTURE.md), [Current Status](docs/STATUS.md
 
 These are engineering foundations. They do not yet constitute a Linux distribution or a mobile operating system.
 
+## Nila Assistant Android starter
+
+A separate Android prototype is available under [apps/nila-assistant](apps/nila-assistant/README.md). Its design, privacy boundaries, capability roadmap and implementation status are documented in [Nila Assistant Architecture](docs/NILA_ASSISTANT_ARCHITECTURE.md). This is not the Nila OS runtime and does not yet include a production LLM, general web crawler, privileged app manager or video-generation engine.
+
 ## Compatibility and security boundaries
 
 - Recognizing an EXE, APP, APK, or SH extension does not translate or execute the application.
