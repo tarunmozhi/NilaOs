@@ -64,13 +64,17 @@ def parse_fdt(blob: bytes) -> dict[str, bytes]:
     if version >= 17:
         if len(blob) < 40:
             raise ImageError("FDT version 17 header is truncated")
+        header_size = 40
         size_struct = struct.unpack_from(">I", blob, 36)[0]
     else:
+        header_size = 36
         if off_strings <= off_struct:
             raise ImageError("cannot infer the version 16 FDT structure size")
         size_struct = off_strings - off_struct
 
-    if off_struct < 36 or off_strings < 36 or off_reserve < 36:
+    if total_size < header_size:
+        raise ImageError("FDT total size is shorter than its header")
+    if off_struct < header_size or off_strings < header_size or off_reserve < header_size:
         raise ImageError("FDT section offset overlaps the header")
     if off_struct > total_size or size_struct > total_size - off_struct:
         raise ImageError("FDT structure section is outside total_size")
@@ -82,6 +86,8 @@ def parse_fdt(blob: bytes) -> dict[str, bytes]:
     image = blob[:total_size]
     structure_end = off_struct + size_struct
     strings_end = off_strings + size_strings
+    if max(off_struct, off_strings) < min(structure_end, strings_end):
+        raise ImageError("FDT structure and strings sections overlap")
     cursor = off_struct
     depth = 0
     root_seen = False
@@ -123,7 +129,10 @@ def parse_fdt(blob: bytes) -> dict[str, bytes]:
             if name_offset >= size_strings:
                 raise ImageError("FDT property name offset is invalid")
             raw_name, _ = _read_c_string(image, off_strings + name_offset, strings_end, "FDT property name")
-            name = raw_name.decode("utf-8", errors="strict")
+            try:
+                name = raw_name.decode("ascii", errors="strict")
+            except UnicodeDecodeError as error:
+                raise ImageError("FDT property name is not ASCII") from error
             if depth == 1 and name in QCOM_PROPERTIES:
                 properties[name] = value
         elif token == FDT_NOP:
@@ -152,8 +161,8 @@ def parse_dt_table(blob: bytes) -> list[dict[str, Any]]:
         raise ImageError("input does not have the Android DT table magic value")
     if version != 0:
         raise ImageError(f"unsupported Android DT table version {version}; version 0 is supported")
-    if header_size != 32 or entry_size < 32:
-        raise ImageError("Android DT table header or entry size is invalid")
+    if header_size != 32 or entry_size < 32 or entry_count == 0:
+        raise ImageError("Android DT table header, entry size, or entry count is invalid")
     if total_size < header_size or total_size > len(blob):
         raise ImageError("Android DT table total_size is invalid")
     if entries_offset < header_size or entries_offset > total_size:
