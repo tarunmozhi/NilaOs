@@ -90,6 +90,22 @@ deb $MIRROR $SUITE-updates main
 deb https://security.debian.org/debian-security $SUITE-security main
 EOF
 
+# Machine-readable safety marker consumed by scripts/validate-rootfs.py.
+mkdir -p "$ROOTFS_DIR/etc/nila"
+cat > "$ROOTFS_DIR/etc/nila/rootfs-manifest.json" <<'EOF'
+{
+  "schema_version": 1,
+  "distribution": "Debian",
+  "suite": "bookworm",
+  "architecture": "arm64",
+  "purpose": "development-rootfs-only",
+  "device_ready": false,
+  "kernel_included": false,
+  "boot_image_created": false
+}
+EOF
+
 printf '\nGeneric ARM64 userspace created at: %s\n' "$ROOTFS_DIR"
 printf '%s\n' 'NOT device-ready: no Nila init/services, device drivers, firmware, partition layout, recovery, verified boot, or kernel are included.'
+printf '%s\n' 'Validate structure with: python3 scripts/validate-rootfs.py /absolute/path/to/rootfs'
 printf '%s\n' 'Do not flash this directory. Device-specific integration and a recovery-tested image build are still required.'
