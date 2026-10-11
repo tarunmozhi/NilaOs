@@ -69,6 +69,32 @@ class RootfsValidatorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, "manifest"):
             validate_rootfs(self.root)
 
+    @unittest.skipUnless(hasattr(os, "symlink"), "symbolic links unavailable")
+    def test_usrmerge_symlinks_inside_rootfs_are_accepted(self):
+        shell = self.root / "bin/sh"
+        target_dir = self.root / "usr/bin"
+        target_dir.mkdir()
+        shell.rename(target_dir / "sh")
+        (self.root / "bin").rmdir()
+        try:
+            (self.root / "bin").symlink_to("usr/bin", target_is_directory=True)
+        except (OSError, NotImplementedError) as error:
+            self.skipTest(f"symbolic links unavailable: {error}")
+        self.assertEqual(len(validate_rootfs(self.root)), 4)
+
+    @unittest.skipUnless(hasattr(os, "symlink"), "symbolic links unavailable")
+    def test_required_file_symlink_escaping_rootfs_is_rejected(self):
+        outside_shell = Path(self.temp.name) / "outside-sh"
+        outside_shell.write_text("#!/bin/sh\\n", encoding="utf-8")
+        outside_shell.chmod(0o755)
+        (self.root / "bin/sh").unlink()
+        try:
+            (self.root / "bin/sh").symlink_to(outside_shell)
+        except (OSError, NotImplementedError) as error:
+            self.skipTest(f"symbolic links unavailable: {error}")
+        with self.assertRaisesRegex(ValidationError, "escapes rootfs"):
+            validate_rootfs(self.root)
+
     def test_device_ready_manifest_is_rejected(self):
         path = self.root / "etc/nila/rootfs-manifest.json"
         manifest = json.loads(path.read_text(encoding="utf-8"))
