@@ -66,7 +66,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
   echo "ERROR: run with root privileges (for example, sudo)." >&2
   exit 2
 fi
-for tool in debootstrap chroot qemu-aarch64-static; do
+for tool in debootstrap chroot qemu-aarch64-static python3; do
   command -v "$tool" >/dev/null 2>&1 || { echo "ERROR: required tool not found: $tool" >&2; exit 2; }
 done
 
@@ -107,5 +107,5 @@ EOF
 
 printf '\nGeneric ARM64 userspace created at: %s\n' "$ROOTFS_DIR"
 printf '%s\n' 'NOT device-ready: no Nila init/services, device drivers, firmware, partition layout, recovery, verified boot, or kernel are included.'
-printf '%s\n' 'Validate structure with: python3 scripts/validate-rootfs.py /absolute/path/to/rootfs'
+python3 "$ROOT/scripts/validate-rootfs.py" "$ROOTFS_DIR"
 printf '%s\n' 'Do not flash this directory. Device-specific integration and a recovery-tested image build are still required.'
