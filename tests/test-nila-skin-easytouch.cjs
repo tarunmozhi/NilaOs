@@ -87,22 +87,16 @@ function createEnvironment(width, height, storage) {
     };
     Object.defineProperty(element, "offsetWidth", {
       get() {
-        return id === "easytouch-trigger" && getElement("easytouch-widget").hidden ? 0 : 200;
+        if (id !== "easytouch-trigger") return 200;
+        return getElement("easytouch-widget").hidden ? 0 : 54;
       },
     });
     Object.defineProperty(element, "offsetHeight", {
       get() {
-        return id === "easytouch-trigger" && getElement("easytouch-widget").hidden ? 0 : 300;
+        if (id !== "easytouch-trigger") return 300;
+        return getElement("easytouch-widget").hidden ? 0 : 54;
       },
     });
-    if (id === "easytouch-trigger") {
-      Object.defineProperty(element, "offsetWidth", {
-        get() { return getElement("easytouch-widget").hidden ? 0 : 54; },
-      });
-      Object.defineProperty(element, "offsetHeight", {
-        get() { return getElement("easytouch-widget").hidden ? 0 : 54; },
-      });
-    }
     elements.set(id, element);
     return element;
   }
