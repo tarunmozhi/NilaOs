@@ -22,9 +22,11 @@ EXTRAVERSION =
 EOF
 : > "$tmp/fake/arch/arm64/configs/test_defconfig"
 printf '/* compatible = "qcom,sdm439"; */\n' > "$tmp/fake/arch/arm64/boot/dts/test.dts"
+printf 'model = "PD1930CF_EX";\n' > "$tmp/fake/arch/arm64/boot/dts/pd1930cf.dts"
 output="$(bash "$script" "$tmp/fake")"
 grep -q 'VERSION = 4' <<<"$output"
 grep -q 'test_defconfig' <<<"$output"
 grep -q 'test.dts' <<<"$output"
+grep -q 'pd1930cf.dts' <<<"$output"
 grep -q 'NOT verified' <<<"$output"
 echo "Kernel source inspector guard tests passed."
