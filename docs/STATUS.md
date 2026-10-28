@@ -25,6 +25,7 @@ The current repository is an engineering baseline, not a Linux distribution or b
 - MHR command-line tool
 - vivo 1906 reference profile with schema validation and regression tests
 - Guarded ARM64 Linux kernel-build helper with configurable cross-compiler prefix and checked `Image.gz-dtb` output
+- Guarded native Linux rootfs staging helper: requires a static ARM64 BusyBox binary and creates an early-userspace rescue-shell scaffold
 - Nila Skin browser preview with user-toggleable, draggable, customizable Easy Touch shortcuts
 
 These code checks, registries, and preview do not provide a running kernel, userspace, init system, service enforcement, or native phone UI.
@@ -58,7 +59,7 @@ These code checks, registries, and preview do not provide a running kernel, user
 ## Not yet implemented / verified
 
 - Verified mapping from the reported `PD1930CF_EX_A_6.71.15` build to the candidate Y11 source's `PD1930F_EX` or `PD1930BF_EX` board overlay, exact boot configuration, and stock boot chain. A local candidate tree reports Linux 4.9.227 and SDM439 support, but its mirror provenance and exact CF compatibility are not verified; it is not included or built in this repository.
-- Native Linux root filesystem, early userspace, init/service manager, and boot-time services
+- Complete native Linux root filesystem, production init/service manager, and Nila boot-time services (only an unbuilt, BusyBox-dependent early-userspace scaffold is defined)
 - Device tree/DTBO selection, kernel modules, firmware, and verified partition map
 - Linux device drivers and hardware integration
 - Recovery environment and verified restore path
