@@ -8,12 +8,17 @@ KERNEL_SRC="$TEMP_ROOT/kernel"
 TOOL_BIN="$TEMP_ROOT/toolchain/bin"
 OUT_DIR="$TEMP_ROOT/output"
 CROSS_COMPILE="$TOOL_BIN/aarch64-linux-android-"
+DTC_EXT="$TOOL_BIN/dtc"
 MAKE_LOG="$TEMP_ROOT/make.log"
 
 mkdir -p "$KERNEL_SRC/arch/arm64/configs" "$TOOL_BIN"
 touch "$KERNEL_SRC/Makefile" "$KERNEL_SRC/arch/arm64/configs/test_defconfig"
 
 cat > "$TOOL_BIN/aarch64-linux-android-gcc" <<'EOF'
+#!/usr/bin/env bash
+exit 0
+EOF
+cat > "$TOOL_BIN/dtc" <<'EOF'
 #!/usr/bin/env bash
 exit 0
 EOF
@@ -41,19 +46,21 @@ case " $* " in
     ;;
 esac
 EOF
-chmod +x "$TOOL_BIN/aarch64-linux-android-gcc" "$TOOL_BIN/make"
+chmod +x "$TOOL_BIN/aarch64-linux-android-gcc" "$TOOL_BIN/dtc" "$TOOL_BIN/make"
 
 PATH="$TOOL_BIN:$PATH" \
 MAKE_LOG="$MAKE_LOG" \
 KERNEL_SRC="$KERNEL_SRC" \
 KERNEL_DEFCONFIG="test_defconfig" \
 CROSS_COMPILE="$CROSS_COMPILE" \
+DTC_EXT="$DTC_EXT" \
 OUT_DIR="$OUT_DIR" \
 JOBS=2 \
 bash "$ROOT/scripts/build-kernel.sh"
 
 [[ -s "$OUT_DIR/arch/arm64/boot/Image.gz-dtb" ]]
 grep -F "CROSS_COMPILE=$CROSS_COMPILE" "$MAKE_LOG" >/dev/null
+grep -F "DTC_EXT=$DTC_EXT" "$MAKE_LOG" >/dev/null
 grep -F "Image.gz-dtb" "$MAKE_LOG" >/dev/null
 
 if PATH="$TOOL_BIN:$PATH" \
@@ -66,4 +73,15 @@ if PATH="$TOOL_BIN:$PATH" \
   exit 1
 fi
 
-echo "Kernel build helper mock passed; no kernel source was compiled."
+if PATH="$TOOL_BIN:$PATH" \
+   KERNEL_SRC="$KERNEL_SRC" \
+   KERNEL_DEFCONFIG="test_defconfig" \
+   CROSS_COMPILE="$CROSS_COMPILE" \
+   DTC_EXT="$TEMP_ROOT/missing-dtc" \
+   OUT_DIR="$TEMP_ROOT/invalid-dtc-output" \
+   bash "$ROOT/scripts/build-kernel.sh" >/dev/null 2>&1; then
+  echo "ERROR: invalid DTC_EXT value was accepted" >&2
+  exit 1
+fi
+
+echo "Kernel build helper mock passed; DTC_EXT forwarding validated; no kernel source was compiled."
