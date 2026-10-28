@@ -25,11 +25,19 @@
 #lock .lockscreen>*{z-index:1}
 @media(prefers-reduced-motion:reduce){.screen{animation:none}}
 
+
+/* Brand mark refinement: cyan crescent, with a quiet watermark on every screen */
+.crescent-logo{font-family:Georgia,serif;font-size:31px!important;line-height:1;color:#e5fbff;background:linear-gradient(145deg,#123d6c,#071b31)!important;border:1px solid #2678b8;box-shadow:0 0 24px #087cff55,inset 0 0 14px #56d8ff18}
+.screen:before{content:"☾";position:absolute;z-index:0;pointer-events:none;right:3%;top:8%;font-family:Georgia,serif;font-size:clamp(130px,25vw,250px);line-height:1;color:#56d8ff;opacity:.055;text-shadow:0 0 32px #087cff;transform:rotate(-18deg)}
+.screen>*{position:relative;z-index:1}
+#home .hero{isolation:isolate}
+#home .home-crescent-mark{font-family:Georgia,serif}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header class="top"><div class="brand"><div class="logo">∿</div><div>Nila Skin <div class="small">Your phone. Your OS.</div></div></div><div class="tag">FULL UI PROTOTYPE · 720 × 1544 TARGET</div></header>
+<header class="top"><div class="brand"><div class="logo crescent-logo" aria-label="Nila crescent">☾</div><div>Nila Skin <div class="small">Your phone. Your OS.</div></div></div><div class="tag">FULL UI PROTOTYPE · 720 × 1544 TARGET</div></header>
 <div class="layout">
 <nav class="nav" aria-label="Nila screens"><h3>Explore Nila</h3>
 <button class="active" data-screen="home">⌂ &nbsp; Home</button><button data-screen="lock">▣ &nbsp; Lock screen</button><button data-screen="control">☷ &nbsp; Control Center</button><button data-screen="drawer">▦ &nbsp; App drawer</button><button data-screen="notifications">♧ &nbsp; Notifications</button><button data-screen="settings">⚙ &nbsp; Settings</button><button data-screen="performance">◉ &nbsp; Performance</button><button data-screen="memory">▤ &nbsp; External Memory</button><button data-screen="security">⬡ &nbsp; Security & Privacy</button><button data-screen="vault">▣ &nbsp; Nila Vault</button><button data-screen="recents">▣ &nbsp; Recents</button><button data-screen="search">⌕ &nbsp; Search</button><button data-screen="customize">✦ &nbsp; Nila Skin</button><button data-screen="setup">➜ &nbsp; First-run setup</button><button data-screen="power">⏻ &nbsp; Power menu</button><button data-screen="recovery">⟳ &nbsp; Recovery</button>
