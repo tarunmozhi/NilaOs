@@ -47,7 +47,7 @@ case "$description" in
     ;;
 esac
 case "$description" in
-  *statically linked*) ;;
+  *"statically linked"*) ;;
   *)
     echo "ERROR: BusyBox must be statically linked for early userspace: $description" >&2
     exit 2
