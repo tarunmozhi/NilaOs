@@ -6,6 +6,7 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 KERNEL_SRC="${KERNEL_SRC:-}"
 KERNEL_DEFCONFIG="${KERNEL_DEFCONFIG:-}"
 CROSS_COMPILE="${CROSS_COMPILE:-aarch64-linux-gnu-}"
+DTC_EXT="${DTC_EXT:-}"
 OUT_DIR="${OUT_DIR:-$ROOT/out/kernel}"
 JOBS="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || printf '2')}"
 
@@ -20,6 +21,7 @@ Required:
 
 Optional:
   CROSS_COMPILE       Compiler prefix ending in '-' (default: aarch64-linux-gnu-)
+  DTC_EXT             Explicit executable device-tree compiler, for legacy trees (e.g. /usr/bin/dtc)
   OUT_DIR             Output directory (default: out/kernel)
   JOBS                Positive integer build parallelism (default: available CPU count)
 
@@ -45,6 +47,10 @@ if [[ ! "$CROSS_COMPILE" =~ ^[A-Za-z0-9_./+-]+-$ ]]; then
 fi
 if [[ ! "$JOBS" =~ ^[1-9][0-9]*$ ]]; then
   echo "ERROR: JOBS must be a positive integer." >&2
+  exit 2
+fi
+if [[ -n "$DTC_EXT" && ( ! -f "$DTC_EXT" || ! -x "$DTC_EXT" ) ]]; then
+  echo "ERROR: DTC_EXT must point to an executable device-tree compiler." >&2
   exit 2
 fi
 if [[ ! -d "$KERNEL_SRC" || ! -f "$KERNEL_SRC/Makefile" ]]; then
@@ -74,8 +80,13 @@ case "$OUT_DIR/" in
     ;;
 esac
 
-make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE="$CROSS_COMPILE" "$KERNEL_DEFCONFIG"
-make -C "$KERNEL_SRC" O="$OUT_DIR" ARCH=arm64 CROSS_COMPILE="$CROSS_COMPILE" -j"$JOBS" Image.gz-dtb
+MAKE_ARGS=(-C "$KERNEL_SRC" "O=$OUT_DIR" ARCH=arm64 "CROSS_COMPILE=$CROSS_COMPILE")
+if [[ -n "$DTC_EXT" ]]; then
+  MAKE_ARGS+=("DTC_EXT=$DTC_EXT")
+fi
+
+make "${MAKE_ARGS[@]}" "$KERNEL_DEFCONFIG"
+make "${MAKE_ARGS[@]}" -j"$JOBS" Image.gz-dtb
 
 if [[ ! -s "$OUT_DIR/arch/arm64/boot/Image.gz-dtb" ]]; then
   echo "ERROR: kernel build completed without Image.gz-dtb output." >&2
