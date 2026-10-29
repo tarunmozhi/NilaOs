@@ -1,0 +1,24 @@
+NILA OS — PC/QEMU KERNEL BUILD STATUS
+Date: 2026-10-29
+Host: DESKTOP-9TTEQ0R
+Target of this build: ARM64 QEMU virt test kernel, NOT a vivo Y11 flash image.
+
+FIX APPLIED
+The prior build failed because /tmp was a 3.9 GiB tmpfs and reached 100% usage. The build output directory was copied to the Linux disk at /home/administrator/nila-qemu-vendor-build, and TMPDIR was set to /home/administrator/build-tmp.
+
+BUILD RESULT
+Command completed with exit code 0 in 56.26 seconds after resuming from the copied output tree.
+Kernel output: E:\ARUNMOZHI\nila-build\outputs\sdm439\NilaOS-QEMU-ARM64-Image-20261029
+Size: 36 MiB
+SHA-256: a7c6fd5b74c7aab03bdc4d8cb38f828128162b84a59db8f3d33121f8cf36b33b
+
+Compressed copy:
+E:\ARUNMOZHI\nila-build\outputs\sdm439\NilaOS-QEMU-ARM64-Image-20261029.gz
+Size: 13 MiB
+SHA-256: a8fca4aaafb57035d965736aa30d277764b83e90e51dc88ac3e9a2d00c2cf535
+
+QEMU CHECK
+QEMU 10.2.1 is installed. Test launch used machine=virt, CPU=cortex-a53, RAM=1024 MiB, the newly built kernel, and existing Nila QEMU test initramfs. The process stayed alive until timeout (8–12 seconds) but produced no serial console output, including with earlycon=pl011. Therefore Linux boot completion is NOT confirmed; the test is inconclusive.
+
+LIMITATIONS
+This is a QEMU test kernel artifact only. It is not a complete Nila OS ROM, not a flash-ready vivo Y11 image, and not proof of a successful Linux boot. The separate initramfs is a test candidate. Do not flash this kernel to the phone.

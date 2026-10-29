@@ -1,0 +1,31 @@
+NILA OS QEMU BOOT TEST REPORT
+Date: 2026-10-29
+
+RESULT
+- ARM64 Linux kernel compilation succeeded.
+- QEMU successfully executed the kernel on machine=virt, CPU=cortex-a53, RAM=1024 MiB.
+- Serial kernel output is confirmed. The earlier silent-console diagnosis is resolved for kernel logs.
+- The kernel passed the earlier Qualcomm secure-monitor panic after QEMU-only test stubs were applied.
+- A 35-second QEMU run stayed alive and reached the initramfs /init script; a findfs process was observed around 19 seconds.
+- The run was deliberately stopped by a 35-second timeout. No QEMU process remains running.
+
+ARTIFACTS
+- NilaOS-QEMU-ARM64-Image-20261029 (36 MiB)
+  SHA256: 68ba1a7ea69526df24e6484b79cc7b62a057f7de9dd36b58375ee5f66165a6d5
+- NilaOS-QEMU-ARM64-Image-20261029.gz (13 MiB)
+  SHA256: 5cbbfab4c58d2e7e78755a6574dc7470c41cd393639b889b348c0228c6715637
+- NilaOS-PD1930F-qemu-test-initramfs-v11-20261029.cpio.gz
+  SHA256: 8767f18ef69f423efbe5954a6f82a536e99927876919c318c6b8524ee64f235b
+- NilaOS-QEMU-BOOT-LOG-20261029.txt
+  SHA256: 73997e1fe86d90e8f2985a02fc0bef5ea552582f21797846aa23cc717c2b90b3
+
+LIMITATIONS
+- The userspace console still reports "Warning: unable to open an initial console"; initramfs output/rescue shell is not yet verified.
+- The initramfs currently waits for a separate filesystem labeled NILA_ROOTFS. That root filesystem has not been attached in this test, so this is not a complete OS boot.
+- This kernel is a QEMU-specific test build. It contains CONFIG_NILA_QEMU_TEST-only bypasses for Qualcomm secure-monitor calls and Vivo SMEM board info, to let generic QEMU hardware get past phone-specific early init.
+- It is NOT a flash-ready Vivo Y11 ROM and must NOT be flashed to the phone.
+- The original kernel source files were restored after the test-only build changes; a search found no remaining CONFIG_NILA_QEMU_TEST markers in the edited Qualcomm/Vivo source directories.
+- No phone was flashed or modified.
+
+NEXT INTERNAL TASK
+Continue debugging the userspace console and provide a test NILA_ROOTFS or a documented rescue-shell path. Do not describe this as a complete Nila OS ROM until that boot is verified.
