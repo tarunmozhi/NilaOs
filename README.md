@@ -56,4 +56,24 @@ CROSS_COMPILE=/path/to/toolchain/bin/aarch64-linux-android- \
 ./scripts/build-kernel.sh
 ```
 
-A successful kernel compile does **not** prove phone bootability. See [Linux Boot Requirements](docs/BOOTABLE_BUILD.md).
+
+## Native Linux early-userspace scaffold
+
+The first userspace step is a minimal initramfs/rootfs staging tree that uses a statically linked ARM64 BusyBox binary. It is deliberately a bring-up shell, not a complete distribution or a phone image.
+
+```bash
+BUSYBOX_STATIC=/absolute/path/to/aarch64-static-busybox \
+ROOTFS_DIR="$PWD/out/native-rootfs" \
+./scripts/setup-native-rootfs.sh
+```
+
+The script validates the binary architecture and static linkage, refuses to overwrite an unmarked directory, and creates the rootfs layout plus `/init`. The generated init mounts basic virtual filesystems and opens a console rescue shell. It does not mount Android partitions, start unimplemented Nila services, load device firmware, or prove hardware support.
+
+## Build and test the early-userspace scaffold
+
+```bash
+bash -n scripts/setup-native-rootfs.sh tests/test-native-rootfs-setup.sh
+bash tests/test-native-rootfs-setup.sh
+```
+
+This guard test does not build or boot the rootfs. A successful kernel compile does **not** prove phone bootability. See [Linux Boot Requirements](docs/BOOTABLE_BUILD.md).

@@ -1,0 +1,495 @@
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.9.227 (root@DESKTOP-9TTEQ0R) (gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) ) #9 SMP PREEMPT Thu Oct 29 01:14:02 UTC 2026
+[    0.000000] Boot CPU: AArch64 Processor [410fd034]
+[    0.000000] Machine: linux,dummy-virt
+[    0.000000] earlycon: pl11 at MMIO32 0x0000000009000000 (options '')
+[    0.000000] bootconsole [pl11] enabled
+[    0.000000] debug: ignoring loglevel setting.
+[    0.000000] efi: Getting EFI parameters from FDT:
+[    0.000000] efi: UEFI not found.
+[    0.000000] cma: Reserved 20 MiB at 0x000000007ec00000
+[    0.000000] On node 0 totalpages: 262144
+[    0.000000]   DMA zone: 4096 pages used for memmap
+[    0.000000]   DMA zone: 0 pages reserved
+[    0.000000]   DMA zone: 262144 pages, LIFO batch:31
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] Nila QEMU test: skipping Qualcomm secure-monitor PRNG call
+[    0.000000] bsp_test_mode=0, power_off_charging_mode=0
+[    0.000000] percpu: Embedded 22 pages/cpu s52008 r8192 d29912 u90112
+[    0.000000] pcpu-alloc: s52008 r8192 d29912 u90112 alloc=22*4096
+[    0.000000] pcpu-alloc: [0] 0 
+[    0.000000] CPU features: enabling workaround for ARM erratum 845719
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 258048
+[    0.000000] Kernel command line: earlycon=pl011,mmio32,0x09000000 console=ttyAMA0,115200 devtmpfs.mount=0 ignore_loglevel loglevel=8 rdinit=/init panic=-1
+[    0.000000] PID hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.000000] Dentry cache hash table entries: 131072 (order: 8, 1048576 bytes)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 7, 524288 bytes)
+[    0.000000] Memory: 957556K/1048576K available (17020K kernel code, 2320K rwdata, 10644K rodata, 6464K init, 10713K bss, 70540K reserved, 20480K cma-reserved)
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     modules : 0xffffff8000000000 - 0xffffff8008000000   (   128 MB)
+[    0.000000]     vmalloc : 0xffffff8008000000 - 0xffffffbebfff0000   (   250 GB)
+[    0.000000]       .text : 0x        (ptrval) - 0x        (ptrval)   ( 17024 KB)
+[    0.000000]     .rodata : 0x        (ptrval) - 0x        (ptrval)   ( 10688 KB)
+[    0.000000]       .init : 0x        (ptrval) - 0x        (ptrval)   (  6464 KB)
+[    0.000000]       .data : 0x        (ptrval) - 0x        (ptrval)   (  2321 KB)
+[    0.000000]        .bss : 0x        (ptrval) - 0x        (ptrval)   ( 10714 KB)
+[    0.000000]     fixed   : 0xffffffbefe7fb000 - 0xffffffbefec00000   (  4116 KB)
+[    0.000000]     PCI I/O : 0xffffffbefee00000 - 0xffffffbeffe00000   (    16 MB)
+[    0.000000]     vmemmap : 0xffffffbf00000000 - 0xffffffc000000000   (     4 GB maximum)
+[    0.000000]               0xffffffbf14000000 - 0xffffffbf15000000   (    16 MB actual)
+[    0.000000]     memory  : 0xffffffc500000000 - 0xffffffc540000000   (  1024 MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] Preemptible hierarchical RCU implementation.
+[    0.000000] 	RCU dyntick-idle grace-period acceleration is enabled.
+[    0.000000] 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=1.
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[    0.000000] 
+[    0.000000] **********************************************************
+[    0.000000] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.000000] **                                                      **
+[    0.000000] ** trace_printk() being used. Allocating extra memory.  **
+[    0.000000] **                                                      **
+[    0.000000] ** This means that this is a DEBUG kernel and it is     **
+[    0.000000] ** unsafe for production use.                           **
+[    0.000000] **                                                      **
+[    0.000000] ** If you see this message and you are not debugging    **
+[    0.000000] ** the kernel, report this immediately to your vendor!  **
+[    0.000000] **                                                      **
+[    0.000000] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.000000] **********************************************************
+[    0.000000] NR_IRQS:64 nr_irqs:64 0
+[    0.000000] 	Offload RCU callbacks from all CPUs
+[    0.000000] 	Offload RCU callbacks from CPUs: 0.
+[    0.000000] arm_arch_timer: Architected cp15 timer(s) running at 62.50MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+[    0.000134] sched_clock: 56 bits at 62MHz, resolution 16ns, wraps every 4398046511096ns
+[    0.000940] clocksource: Switched to clocksource arch_sys_counter
+[    0.020504] allocated 6291456 bytes of page_ext
+[    0.028500] Node 0, zone      DMA: page owner found early allocated 2038 pages
+[    0.031357] kmemleak: Kernel memory leak detector disabled
+[    0.031941] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=625000)
+[    0.032391] pid_max: default: 32768 minimum: 301
+[    0.035057] Security Framework initialized
+[    0.035371] SELinux:  Initializing.
+[    0.036079] SELinux:  Starting in permissive mode
+[    0.037005] Mount-cache hash table entries: 2048 (order: 2, 16384 bytes)
+[    0.037252] Mountpoint-cache hash table entries: 2048 (order: 2, 16384 bytes)
+[    0.057077] ftrace: allocating 42935 entries in 168 pages
+[    0.400626] /cpus/cpu-map: empty cluster
+[    0.402953] /cpus/cpu@0: Unknown CPU type
+[    0.403224] sched-energy: CPU device node has no sched-energy-costs
+[    0.415025] ASID allocator initialised with 32768 entries
+[    0.434806] Nila QEMU test: skipping Qualcomm debug LAR secure-monitor call
+[    0.435110] mem dump base table DT node does not exist
+[    0.437917] EFI services will not be available.
+[    0.447793] Brought up 1 CPUs
+[    0.447953] SMP: Total of 1 processors activated.
+[    0.448251] CPU features: detected feature: 32-bit EL0 Support
+[    0.448475] CPU features: detected feature: Kernel page table isolation (KPTI)
+[    0.460243] CPU: All CPU(s) started at EL1
+[    0.460578] alternatives: patching kernel code
+[    0.462772] CPU0: update max cpu_capacity 1024
+[    0.477977] devtmpfs: initialized
+[    0.506328] DMI not present or invalid.
+[    0.509131] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.509591] futex hash table entries: 256 (order: 3, 32768 bytes)
+[    0.532091] pinctrl core: initialized pinctrl subsystem
+[    0.548909] NET: Registered protocol family 16
+[    0.553084] schedtune: init normalization constants...
+[    0.553278] schedtune: no energy model data
+[    0.553404] schedtune: disabled!
+[    0.563933] cpuidle: using governor menu
+[    0.564819] cpuidle: using governor qcom
+[    0.566073] vdso: 2 pages (1 code @         (ptrval), 1 data @         (ptrval))
+[    0.566535] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.579784] DMA: preallocated 256 KiB pool for atomic allocations
+[    0.590260] Nila QEMU test: skipping Qualcomm JTAG secure-monitor feature query
+[    0.592664] Serial: AMBA PL011 UART driver
+[    0.782896] khungtaskd start...
+[    0.798767] socinfo_init: Can't find SMEM_HW_SW_BUILD_ID; falling back on dummy values.
+[    0.799787] Unknown SOC ID!
+[    0.800169] ------------[ cut here ]------------
+[    0.800713] WARNING: CPU: 0 PID: 1 at drivers/soc/qcom/socinfo.c:2027 socinfo_init+0xf8/0x740
+[    0.801209] Modules linked in:
+[    0.801687] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.9.227 #9
+[    0.801875] Hardware name: linux,dummy-virt (DT)
+[    0.802075] task:         (ptrval) task.stack:         (ptrval)
+[    0.802371] PC is at socinfo_init+0xf8/0x740
+[    0.802565] LR is at socinfo_init+0xf8/0x740
+[    0.802730] pc : [<ffffff9b551ca680>] lr : [<ffffff9b551ca680>] pstate: 60400045
+[    0.802934] sp : ffffffc53c50bce0
+[    0.803131] x29: ffffffc53c50bda0 x28: 0000000000000000 
+[    0.803396] x27: 0000000000000000 x26: 0000000000000000 
+[    0.803584] x25: ffffff9b5531b390 x24: ffffff9b55205c60 
+[    0.803771] x23: ffffff9b5517fab0 x22: 0000000000000001 
+[    0.803951] x21: ffffff9b56419000 x20: ffffff9b56419000 
+[    0.804134] x19: ffffff9b54790308 x18: 000000000000000a 
+[    0.804314] x17: 0000000000000002 x16: 0000000000002ac0 
+[    0.804497] x15: 0000000000000000 x14: ffffffffffffffff 
+[    0.804702] x13: 0000000000000010 x12: ffffff9b55a2e747 
+[    0.804893] x11: 0000000000000006 x10: ffffff9b55a2e780 
+[    0.805106] x9 : 0000000000003ff0 x8 : 00000029e96a5000 
+[    0.805365] x7 : ffffffc53c50bbd0 x6 : 00000000019fede9 
+[    0.805550] x5 : 00ffffffffffffff x4 : ffffff9b557f7328 
+[    0.805737] x3 : 0000000000000000 x2 : 0000000000000000 
+[    0.805921] x1 : ffffff9b557f6000 x0 : 000000000000000f 
+[    0.806226] 
+[    0.806226] PC: 0xffffff9b551ca640:
+[    0.806806] a640  2a1603e3 9100c261 528001e5 52800004 d0ffd460 91330000 9798c290 528001e0
+[    0.807988] a660  b9000aa0 f9400280 b4000060 b9400400 350000a0 d0ffd460 91340000 9798c287
+[    0.808803] a680  d4210000 f9400281 b9400420 b4000081 7106d41f 54000049 d4210000 d37c7c00
+[    0.809644] a6a0  d0ffae21 9110e021 b8606820 b9000ea0 97a95187 f9400280 b9400aa2 b9400806
+[    0.810541] 
+[    0.810541] LR: 0xffffff9b551ca640:
+[    0.810805] a640  2a1603e3 9100c261 528001e5 52800004 d0ffd460 91330000 9798c290 528001e0
+[    0.811696] a660  b9000aa0 f9400280 b4000060 b9400400 350000a0 d0ffd460 91340000 9798c287
+[    0.812709] a680  d4210000 f9400281 b9400420 b4000081 7106d41f 54000049 d4210000 d37c7c00
+[    0.813288] a6a0  d0ffae21 9110e021 b8606820 b9000ea0 97a95187 f9400280 b9400aa2 b9400806
+[    0.813737] 
+[    0.813737] SP: 0xffffffc53c50bca0:
+[    0.813880] bca0  551ca680 ffffff9b 3c50bce0 ffffffc5 551ca680 ffffff9b 60400045 00000000
+[    0.814330] bcc0  ffffffff ffffffff 00000000 80808000 ffffffff ffffffff 656d6862 fefeff6e
+[    0.814989] bce0  3c6ca100 ffffffc5 3c703000 ffffffc5 3c50bd70 ffffffc5 53ab6b50 ffffff9b
+[    0.815710] bd00  558a6e38 ffffff9b 00000000 00000000 3c500000 ffffffc5 55205c00 ffffff9b
+[    0.816505] ---[ end trace db39372c34d27fd0 ]---
+[    0.816786] Call trace:
+[    0.817084] Exception stack(0xffffffc53c50bb80 to 0xffffffc53c50bcb0)
+[    0.817556] bb80: ffffff9b54790308 0000007fffffffff 0000000041b8e000 ffffff9b551ca680
+[    0.817784] bba0: 0000000060400045 ffffff9b53ab16d4 000000000000000f ffffff9b557f6000
+[    0.817991] bbc0: 0000000000000000 0000000000000000 ffffff9b557f7328 00ffffffffffffff
+[    0.818227] bbe0: 00000000019fede9 ffffffc53c50bbd0 00000029e96a5000 0000000000003ff0
+[    0.818437] bc00: ffffff9b55a2e780 0000000000000006 ffffff9b55a2e747 0000000000000010
+[    0.818646] bc20: ffffffffffffffff 0000000000000000 0000000000002ac0 0000000000000002
+[    0.818855] bc40: 000000000000000a ffffff9b54790308 ffffff9b56419000 ffffff9b56419000
+[    0.819094] bc60: 0000000000000001 ffffff9b5517fab0 ffffff9b55205c60 ffffff9b5531b390
+[    0.819315] bc80: 0000000000000000 0000000000000000 0000000000000000 ffffffc53c50bda0
+[    0.819607] bca0: ffffff9b551ca680 ffffffc53c50bce0
+[    0.819810] [<        (ptrval)>] socinfo_init+0xf8/0x740
+[    0.819985] [<        (ptrval)>] do_one_initcall+0x58/0x160
+[    0.820182] [<        (ptrval)>] kernel_init_freeable+0x194/0x224
+[    0.820355] [<        (ptrval)>] kernel_init+0x1c/0x104
+[    0.820507] [<        (ptrval)>] ret_from_fork+0x10/0x50
+[    0.821541] can't find qcom,msm-imem node
+[    0.821732] socinfo_print: v0.1, id=0, ver=0.1
+[    0.822350] vivo_boardinfo_init: Nila QEMU test: skipping Vivo SMEM board-info init
+[    0.828802] SCSI subsystem initialized
+[    0.831672] vusb dbg: usbcore: registered new interface driver usbfs
+[    0.832850] vusb dbg: usbcore: registered new interface driver hub
+[    0.833773] vusb dbg: usbcore: registered new device driver usb
+[    0.836430] media: Linux media interface: v0.10
+[    0.836859] Linux video capture interface: v2.00
+[    0.842841] BATTERY: batterydata_init: Battery-data device created!
+[    0.844471] EDAC MC: Ver: 3.0.0
+[    0.849807] dmi: Firmware registration failed.
+[    0.855417] dev-cpufreq: No tables parsed from DT.
+[    0.863172] Advanced Linux Sound Architecture Driver Initialized.
+[    0.874141] Bluetooth: Core ver 2.22
+[    0.874603] NET: Registered protocol family 31
+[    0.874755] Bluetooth: HCI device and connection manager initialized
+[    0.875371] Bluetooth: HCI socket layer initialized
+[    0.875714] Bluetooth: L2CAP socket layer initialized
+[    0.884021] NetLabel: Initializing
+[    0.884295] NetLabel:  domain hash size = 128
+[    0.884643] NetLabel:  protocols = UNLABELED CIPSOv4
+[    0.886013] NetLabel:  unlabeled traffic allowed by default
+[    0.888087] clocksource: Switched to clocksource arch_sys_counter
+[    1.448308] VFS: Disk quotas dquot_6.6.0
+[    1.448894] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    1.451516] Trying to free nonexistent resource <00000000000a0154-00000000000a015b>
+[    1.451758] Trying to free nonexistent resource <00000000000a01e0-00000000000a021f>
+[    1.452695] msm_bus_fabric_init_driver
+[    1.461674] NET: Registered protocol family 2
+[    1.470156] TCP established hash table entries: 8192 (order: 4, 65536 bytes)
+[    1.470577] TCP bind hash table entries: 8192 (order: 6, 262144 bytes)
+[    1.471332] TCP: Hash tables configured (established 8192 bind 8192)
+[    1.472218] UDP hash table entries: 512 (order: 3, 49152 bytes)
+[    1.473311] UDP-Lite hash table entries: 512 (order: 3, 49152 bytes)
+[    1.475566] NET: Registered protocol family 1
+[    1.486678] Trying to unpack rootfs image as initramfs...
+[    1.650771] Freeing initrd memory: 2048K
+[    1.654866] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+[    1.663493] cryptomgr_test (37) used greatest stack depth: 14752 bytes left
+[    1.664019] cryptomgr_test (36) used greatest stack depth: 14640 bytes left
+[    1.689350] audit: initializing netlink subsys (disabled)
+[    1.694548] audit: type=2000 audit(1.690:1): initialized
+[    1.699053] Initialise system trusted keyrings
+[    1.704359] workingset: timestamp_bits=61 max_order=18 bucket_order=0
+[    1.764356] Registering sdcardfs 0.1
+[    1.767991] fuse init (API version 7.26)
+[    1.775719] SELinux:  Registering netfilter hooks
+[    1.779552] pfk_ext4 [pfk_ext4_init]: PFK EXT4 inited successfully
+[    1.779798] pfk_f2fs [pfk_f2fs_init]: PFK F2FS inited successfully
+[    1.780059] pfk [pfk_init]: Driver initialized successfully
+[    1.807754] Key type asymmetric registered
+[    1.808001] Asymmetric key parser 'x509' registered
+[    1.808387] io scheduler noop registered
+[    1.808764] io scheduler cfq registered (default)
+[    1.819544] mdss_dsi_status_init: DSI status check interval:2000
+[    1.827324] pil: failed to find qcom,msm-imem-pil node
+[    1.827546] pil_tz_init subsystem failure collect.
+[    1.850247] msm_serial: driver initialized
+[    1.852856] msm_serial_hs module loaded
+[    1.871598] diag: MUX: unable to register pcie operations for proc: 0, err: -22
+[    1.871849] diag: MUX: unable to register PCIe operations, continuing with USB registrations for proc: 0, err: -22
+[    1.998308] diag: In __diag_glink_init, unable to register for glink channel DIAG_CTRL
+[    2.001672] diag: In __diag_glink_init, unable to register for glink channel DIAG_DATA
+[    2.004568] diag: In __diag_glink_init, unable to register for glink channel DIAG_CMD
+[    2.007090] diag: In __diag_glink_init, unable to register for glink channel DIAG_DCI_DATA
+[    2.009609] diag: In __diag_glink_init, unable to register for glink channel DIAG_DCI_CMD
+[    2.027294] Unable to detect cache hierarchy for CPU 0
+[    2.167282] brd: module loaded
+[    2.282956] loop: module loaded
+[    2.290008] zram: Added device: zram0
+[    2.290683] lkdtm: No crash points registered, enable through debugfs
+[    2.293346] fpc1020_init OK
+[    2.300214] SCSI Media Changer driver v0.25 
+[    2.309213] libphy: Fixed MDIO Bus: probed
+[    2.309607] tun: Universal TUN/TAP device driver, 1.6
+[    2.309768] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+[    2.312479] PPP generic driver version 2.4.2
+[    2.314277] PPP BSD Compression module registered
+[    2.314495] PPP Deflate Compression module registered
+[    2.314981] PPP MPPE Compression module registered
+[    2.315233] NET: Registered protocol family 24
+[    2.316058] PPTP driver version 0.8.5
+[    2.319778] vusb dbg: usbcore: registered new interface driver r8152
+[    2.320247] vusb dbg: usbcore: registered new interface driver lan78xx
+[    2.320781] vusb dbg: usbcore: registered new interface driver asix
+[    2.321853] vusb dbg: usbcore: registered new interface driver ax88179_178a
+[    2.322313] vusb dbg: usbcore: registered new interface driver cdc_ether
+[    2.322885] vusb dbg: usbcore: registered new interface driver net1080
+[    2.323642] vusb dbg: usbcore: registered new interface driver cdc_subset
+[    2.324455] vusb dbg: usbcore: registered new interface driver zaurus
+[    2.325349] vusb dbg: usbcore: registered new interface driver cdc_ncm
+[    2.331174] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    2.331516] vusb dbg: ehci-platform: EHCI generic platform driver
+[    2.333834] vusb dbg: ehci-msm: Qualcomm On-Chip EHCI Host Controller
+[    2.334893] vusb dbg: usbcore: registered new interface driver cdc_acm
+[    2.335206] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[    2.335916] vusb dbg: usbcore: registered new interface driver usb-storage
+[    2.336324] vusb dbg: usbcore: registered new interface driver ums-alauda
+[    2.336701] vusb dbg: usbcore: registered new interface driver ums-cypress
+[    2.337260] vusb dbg: usbcore: registered new interface driver ums-datafab
+[    2.337650] vusb dbg: usbcore: registered new interface driver ums-freecom
+[    2.338028] vusb dbg: usbcore: registered new interface driver ums-isd200
+[    2.338407] vusb dbg: usbcore: registered new interface driver ums-jumpshot
+[    2.338776] vusb dbg: usbcore: registered new interface driver ums-karma
+[    2.339177] vusb dbg: usbcore: registered new interface driver ums-onetouch
+[    2.339633] vusb dbg: usbcore: registered new interface driver ums-sddr09
+[    2.340213] vusb dbg: usbcore: registered new interface driver ums-sddr55
+[    2.340664] vusb dbg: usbcore: registered new interface driver ums-usbat
+[    2.342352] vusb dbg: usbcore: registered new interface driver usbserial
+[    2.344881] vusb dbg: usbcore: registered new interface driver usb_ehset_test
+[    2.355179] vusb dbg: diag: failed to find diag_dload imem node
+[    2.363488] msm_sharedmem: sharedmem_register_qmi: qmi init successful
+[    2.365605] mousedev: PS/2 mouse device common for all mice
+[    2.368459] i2c /dev entries driver
+[    2.383007] ------------[ cut here ]------------
+[    2.383276] WARNING: CPU: 0 PID: 1 at drivers/media/platform/msm/camera_v2/msm.c:432 msm_sd_register+0x1cc/0x294
+[    2.383543] Modules linked in:
+[    2.383890] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.9.227 #9
+[    2.384108] Hardware name: linux,dummy-virt (DT)
+[    2.384243] task:         (ptrval) task.stack:         (ptrval)
+[    2.384409] PC is at msm_sd_register+0x1cc/0x294
+[    2.384554] LR is at msm_sensor_init_module+0x108/0x1a0
+[    2.384705] pc : [<ffffff9b54082118>] lr : [<ffffff9b551dd7e0>] pstate: 60400045
+[    2.384917] sp : ffffffc53c50bd50
+[    2.385021] x29: ffffffc53c50bd50 x28: 0000000000000000 
+[    2.385255] x27: 0000000000000000 x26: 0000000000000000 
+[    2.385442] x25: ffffff9b5531c0a0 x24: ffffff9b5645f668 
+[    2.385626] x23: ffffff9b5645f670 x22: ffffff9b5495c430 
+[    2.385809] x21: ffffffc53c500000 x20: ffffff9b5645f0b0 
+[    2.385994] x19: ffffffc53b49d440 x18: 000000000000000a 
+[    2.386369] x17: 00000000dc94db73 x16: 000000007d1e2fc5 
+[    2.386556] x15: 0000000000000000 x14: ffffffffffffffff 
+[    2.386740] x13: 0000000000000000 x12: ffffffc53b66b26d 
+[    2.387007] x11: ffffffffffffffff x10: ffffffc53b66ba1c 
+[    2.387292] x9 : 0000000000000000 x8 : ffffffc53b49d600 
+[    2.387478] x7 : 0000000000000000 x6 : 000000000000003f 
+[    2.387745] x5 : 0000000000000040 x4 : 0000000000000000 
+[    2.387947] x3 : 0000000000000000 x2 : 0000000000000000 
+[    2.388128] x1 : 0000000000020006 x0 : 0000000000000000 
+[    2.388314] 
+[    2.388314] PC: 0xffffff9b540820d8:
+[    2.388457] 20d8  a8c47bfd d65f03c0 f940e295 91080283 91050276 9106e282 aa1603e0 aa1503e1
+[    2.388894] 20f8  a9030fe2 97e946b1 3607f800 a9430fe2 f81c0076 a9145662 f90002b6 17ffffbb
+[    2.389468] 2118  d4210000 12800082 2a0203e0 a94153f3 a8c47bfd d65f03c0 aa1503e0 b90033e2
+[    2.390107] 2138  97dea992 b94033e2 f9407e60 b4000180 b90033e2 97fd386d a9425bf5 b94033e2
+[    2.390651] 
+[    2.390651] LR: 0xffffff9b551dd7a0:
+[    2.390792] d7a0  321e0042 b900dc22 d2800002 52800001 97b7c576 f9433660 5281e1c1 72a00021
+[    2.391371] d7c0  b9006c01 91040001 f9003001 528000c1 72a00041 b9017801 91010000 97ba91dc
+[    2.391783] d7e0  2a0003f5 34000200 f9402681 9100a280 36900101 b0ffdae1 2a1503e5 aa1603e4
+[    2.392192] d800  aa1603e2 910b2021 52801863 97a41328 f9433660 9795601b f9433660 9799edb5
+[    2.392929] 
+[    2.392929] SP: 0xffffffc53c50bd10:
+[    2.393146] bd10  551dd7e0 ffffff9b 3c50bd50 ffffffc5 54082118 ffffff9b 60400045 00000000
+[    2.393564] bd30  5645f000 ffffff9b 559e11d0 ffffff9b ffffffff ffffffff 5495c430 ffffff9b
+[    2.393974] bd50  3c50bd90 ffffffc5 551dd7e0 ffffff9b 5645f000 ffffff9b 559e11d0 ffffff9b
+[    2.394381] bd70  3c50bd90 ffffffc5 551dd774 ffffff9b 5645f000 ffffff9b 559e11d0 ffffff9b
+[    2.394851] ---[ end trace db39372c34d27fd1 ]---
+[    2.395004] Call trace:
+[    2.395114] Exception stack(0xffffffc53c50bbf0 to 0xffffffc53c50bd20)
+[    2.395300] bbe0:                                   ffffffc53b49d440 0000007fffffffff
+[    2.395512] bc00: 0000000041b8e000 ffffff9b54082118 0000000060400045 0000000000000000
+[    2.395719] bc20: 0000000000000000 0000000000020006 0000000000000000 0000000000000000
+[    2.395927] bc40: 0000000000000000 0000000000000040 000000000000003f 0000000000000000
+[    2.396134] bc60: ffffffc53b49d600 0000000000000000 ffffffc53b66ba1c ffffffffffffffff
+[    2.396445] bc80: ffffffc53b66b26d 0000000000000000 ffffffffffffffff 0000000000000000
+[    2.396829] bca0: 000000007d1e2fc5 00000000dc94db73 000000000000000a ffffffc53b49d440
+[    2.397041] bcc0: ffffff9b5645f0b0 ffffffc53c500000 ffffff9b5495c430 ffffff9b5645f670
+[    2.397251] bce0: ffffff9b5645f668 ffffff9b5531c0a0 0000000000000000 0000000000000000
+[    2.397459] bd00: 0000000000000000 ffffffc53c50bd50 ffffff9b551dd7e0 ffffffc53c50bd50
+[    2.397793] [<        (ptrval)>] msm_sd_register+0x1cc/0x294
+[    2.397951] [<        (ptrval)>] msm_sensor_init_module+0x108/0x1a0
+[    2.398125] [<        (ptrval)>] do_one_initcall+0x58/0x160
+[    2.398280] [<        (ptrval)>] kernel_init_freeable+0x194/0x224
+[    2.398451] [<        (ptrval)>] kernel_init+0x1c/0x104
+[    2.398599] [<        (ptrval)>] ret_from_fork+0x10/0x50
+[    2.405438] ------------[ cut here ]------------
+[    2.405729] WARNING: CPU: 0 PID: 1 at drivers/media/platform/msm/camera_v2/msm.c:432 msm_sd_register+0x1cc/0x294
+[    2.406006] Modules linked in:
+[    2.406134] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.9.227 #9
+[    2.406529] Hardware name: linux,dummy-virt (DT)
+[    2.406751] task:         (ptrval) task.stack:         (ptrval)
+[    2.406934] PC is at msm_sd_register+0x1cc/0x294
+[    2.407238] LR is at msm_buf_mngr_init+0xf4/0x1e4
+[    2.407543] pc : [<ffffff9b54082118>] lr : [<ffffff9b551ddf6c>] pstate: 60400045
+[    2.407804] sp : ffffffc53c50bd50
+[    2.408022] x29: ffffffc53c50bd50 x28: 0000000000000000 
+[    2.408423] x27: 0000000000000000 x26: 0000000000000000 
+[    2.408647] x25: ffffff9b5531c0f0 x24: ffffff9b55205c70 
+[    2.408856] x23: ffffff9b564849d0 x22: ffffff9b564849c0 
+[    2.409064] x21: ffffffc53c500000 x20: ffffff9b5645f0b0 
+[    2.409301] x19: ffffffc53b5bf430 x18: 000000000000000a 
+[    2.409487] x17: 00000000dc94db73 x16: 000000007d1e2fc5 
+[    2.409669] x15: 0000000000000000 x14: ffffffffffffffff 
+[    2.409849] x13: 0000000000000000 x12: ffffffc53b66b267 
+[    2.410153] x11: ffffffffffffffff x10: ffffffc53b66ba1c 
+[    2.410371] x9 : 0000000000000000 x8 : 0000000000000000 
+[    2.410552] x7 : ffffff9b53fdfe00 x6 : 0000000000000000 
+[    2.410731] x5 : ffffff9b53fdeec0 x4 : ffffff9b53fdf1d0 
+[    2.411092] x3 : 0000000000000000 x2 : 0000000000000000 
+[    2.411322] x1 : 0000000000040000 x0 : 0000000000000000 
+[    2.411616] 
+[    2.411616] PC: 0xffffff9b540820d8:
+[    2.411759] 20d8  a8c47bfd d65f03c0 f940e295 91080283 91050276 9106e282 aa1603e0 aa1503e1
+[    2.412245] 20f8  a9030fe2 97e946b1 3607f800 a9430fe2 f81c0076 a9145662 f90002b6 17ffffbb
+[    2.413029] 2118  d4210000 12800082 2a0203e0 a94153f3 a8c47bfd d65f03c0 aa1503e0 b90033e2
+[    2.413577] 2138  97dea992 b94033e2 f9407e60 b4000180 b90033e2 97fd386d a9425bf5 b94033e2
+[    2.414071] 
+[    2.414071] LR: 0xffffff9b551ddf2c:
+[    2.414210] df2c  321e0000 b900cc20 9100c020 f9007401 52800001 97b7c392 f944e280 5281e021
+[    2.414698] df4c  72a00021 9100c000 b9002c01 9101e261 f9005801 52a00081 b9013801 97ba8ff9
+[    2.415135] df6c  2a0003f5 34000120 91008263 2a0003e4 aa0303e1 52807082 b0ffdb40 910ea000
+[    2.415547] df8c  97987443 1400002d f944e282 f9409440 f900d417 b100c040 54000100 f9405001
+[    2.416065] 
+[    2.416065] SP: 0xffffffc53c50bd10:
+[    2.416243] bd10  551ddf6c ffffff9b 3c50bd50 ffffffc5 54082118 ffffff9b 60400045 00000000
+[    2.416824] bd30  54961208 ffffff9b 56484000 ffffff9b ffffffff ffffffff 564849c0 ffffff9b
+[    2.417524] bd50  3c50bd90 ffffffc5 551ddf6c ffffff9b 54961208 ffffff9b 56484000 ffffff9b
+[    2.418052] bd70  3c50bd90 ffffffc5 551ddef8 ffffff9b 54961208 ffffff9b 56484000 ffffff9b
+[    2.418506] ---[ end trace db39372c34d27fd2 ]---
+[    2.418641] Call trace:
+[    2.418727] Exception stack(0xffffffc53c50bbf0 to 0xffffffc53c50bd20)
+[    2.418909] bbe0:                                   ffffffc53b5bf430 0000007fffffffff
+[    2.419261] bc00: 0000000041b8e000 ffffff9b54082118 0000000060400045 0000000000005e30
+[    2.419474] bc20: 0000000000000000 0000000000040000 0000000000000000 0000000000000000
+[    2.419724] bc40: ffffff9b53fdf1d0 ffffff9b53fdeec0 0000000000000000 ffffff9b53fdfe00
+[    2.419936] bc60: 0000000000000000 0000000000000000 ffffffc53b66ba1c ffffffffffffffff
+[    2.420206] bc80: ffffffc53b66b267 0000000000000000 ffffffffffffffff 0000000000000000
+[    2.420413] bca0: 000000007d1e2fc5 00000000dc94db73 000000000000000a ffffffc53b5bf430
+[    2.420752] bcc0: ffffff9b5645f0b0 ffffffc53c500000 ffffff9b564849c0 ffffff9b564849d0
+[    2.420963] bce0: ffffff9b55205c70 ffffff9b5531c0f0 0000000000000000 0000000000000000
+[    2.421315] bd00: 0000000000000000 ffffffc53c50bd50 ffffff9b551ddf6c ffffffc53c50bd50
+[    2.421532] [<        (ptrval)>] msm_sd_register+0x1cc/0x294
+[    2.421716] [<        (ptrval)>] msm_buf_mngr_init+0xf4/0x1e4
+[    2.421889] [<        (ptrval)>] do_one_initcall+0x58/0x160
+[    2.422045] [<        (ptrval)>] kernel_init_freeable+0x194/0x224
+[    2.422213] [<        (ptrval)>] kernel_init+0x1c/0x104
+[    2.422448] [<        (ptrval)>] ret_from_fork+0x10/0x50
+[    2.423249] CAM-BUFMGR msm_buf_mngr_init:900 msm_buf_mngr_init: msm_sd_register error = -5
+[    2.435209] device-mapper: uevent: version 1.0.3
+[    2.438148] device-mapper: ioctl: 4.35.0-ioctl (2016-06-23) initialised: dm-devel@redhat.com
+[    2.441958] device-mapper: req-crypt: dm-req-crypt successfully initalized.
+[    2.441958] 
+[    2.444963] sdhci: Secure Digital Host Controller Interface driver
+[    2.445214] sdhci: Copyright(c) Pierre Ossman
+[    2.445360] sdhci-pltfm: SDHCI platform and OF driver helper
+[    2.454639] vusb dbg: usbcore: registered new interface driver usbhid
+[    2.454887] usbhid: USB HID core driver
+[    2.456963] ashmem: initialized
+[    2.479738] get_fp_id , fp_id=-1, fp_up=-1, fp_down=-1
+[    2.480051] get_fp_id , fp_id=-1, fp_up=-1, fp_down=-1
+[    2.480218] gf_init(): wrong fp id, not gf3568 driver, exit
+[    2.480405] get_fp_id , fp_id=-1, fp_up=-1, fp_down=-1
+[    2.485569] vusb dbg: usbcore: registered new interface driver snd-usb-audio
+[    2.491719] u32 classifier
+[    2.491863]     Actions configured
+[    2.493052] Netfilter messages via NETLINK v0.30.
+[    2.495518] nf_conntrack version 0.5.0 (7680 buckets, 30720 max)
+[    2.498522] ctnetlink v0.93: registering with nfnetlink.
+[    2.505376] xt_time: kernel timezone is -0000
+[    2.505986] gre: GRE over IPv4 demultiplexor driver
+[    2.506191] IPv4 over IPsec tunneling driver
+[    2.513536] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    2.516632] arp_tables: arp_tables: (C) 2002 David S. Miller
+[    2.518384] Initializing XFRM netlink socket
+[    2.518824] IPsec XFRM device driver
+[    2.522907] NET: Registered protocol family 10
+[    2.541873] mip6: Mobile IPv6
+[    2.542445] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[    2.550140] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+[    2.559600] NET: Registered protocol family 17
+[    2.560229] NET: Registered protocol family 15
+[    2.561668] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[    2.562072] Ebtables v2.0 registered
+[    2.563374] l2tp_core: L2TP core driver, V2.0
+[    2.563800] l2tp_ppp: PPPoL2TP kernel driver, V2.0
+[    2.563975] l2tp_ip: L2TP IP encapsulation support (L2TPv3)
+[    2.564241] l2tp_netlink: L2TP netlink interface
+[    2.564582] l2tp_eth: L2TP ethernet pseudowire support (L2TPv3)
+[    2.564976] l2tp_debugfs: L2TP debugfs support
+[    2.565298] l2tp_ip6: L2TP IP encapsulation support for IPv6 (L2TPv3)
+[    2.567573] sctp: Hash tables configured (bind 128/128)
+[    2.573387] Key type dns_resolver registered
+[    2.575303] NET: Registered protocol family 27
+[    2.583757] Registered cp15_barrier emulation handler
+[    2.584059] Registered setend emulation handler
+[    2.584908] core_ctl: Creating CPU group 0
+[    2.585165] core_ctl: Init CPU0 state
+[    2.612745] registered taskstats version 1
+[    2.613271] Loading compiled-in X.509 certificates
+[    2.635770] kworker/u2:3 (209) used greatest stack depth: 14048 bytes left
+[    2.637393] kworker/u2:3 (210) used greatest stack depth: 13648 bytes left
+[    2.647689] Loaded X.509 cert 'Build time autogenerated kernel key: f6128324f2577b3bd7768e5f7c4623b7c21ab54a'
+[    2.658598] Nila QEMU test: secure-monitor calls disabled
+[    2.658849] scm_is_secure_device: SCM call failed
+[    2.665870] vivo_boardinfo_init_sysfs: No boardinfo found!
+[    2.676985] VIVO_TS_INF^1783^[fts_ts_init]fts_ts_init enter 8006P
+[    2.677718] DSI_LCM_INFO: report_lcm_id(3007): [report_lcm_id] panel_id = 0
+[    2.678235] DSI_LCM_INFO: report_lcm_id(3007): [report_lcm_id] panel_id = 0
+[    2.678594] DSI_LCM_INFO: report_lcm_id(3007): [report_lcm_id] panel_id = 0
+[    2.678928] DSI_LCM_INFO: report_lcm_id(3007): [report_lcm_id] panel_id = 0
+[    2.679379] VIVO_TS_INF^1791^[fts_ts_init]not 8006P
+[    2.679667] VIVO_TS_INF^2500^[nvt_driver_init]start
+[    2.679667] 
+[    2.680007] DSI_LCM_INFO: report_lcm_id(3007): [report_lcm_id] panel_id = 0
+[    2.680244] VIVO_TS_INF^2508^[nvt_driver_init]Novatek 36525 0-flash module lcm id is 0x0
+[    2.680577] VIVO_TS_INF^2510^[nvt_driver_init]not spi module
+[    2.681701] hctosys: unable to open rtc device (rtc0)
+[    2.688885] RNDIS_IPA module is loaded.[    2.689396] clock_late_init: Removing enables held for handed-off clocks
+[    2.690084] ALSA device list:
+[    2.690214]   No soundcards found.
+[    2.692259] Warning: unable to open an initial console.
+[    2.749349] Freeing unused kernel memory: 6464K
+[    2.871626] mount (215) used greatest stack depth: 13184 bytes left
+[    2.921639] mount (216) used greatest stack depth: 13040 bytes left
+[    4.402002] mdev (221) used greatest stack depth: 12912 bytes left
+[    4.882707] IPC_RTR: msm_ipc_router_smd_driver_register Already driver registered IPCRTR
+[    4.883128] IPC_RTR: msm_ipc_router_smd_driver_register Already driver registered IPCRTR
+[   19.549427] findfs (265) used greatest stack depth: 12624 bytes left
